@@ -41,13 +41,28 @@ class ProfileView(APIView):
             "username": user.username,
         })
     
+@swagger_auto_schema(
+    method='post',
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        required=['ott_ids'],
+        properties={
+            'ott_ids': openapi.Schema(
+                type=openapi.TYPE_ARRAY,
+                items=openapi.Items(type=openapi.TYPE_INTEGER),
+                description='구독할 OTT ID 목록 (예: [1, 2])'
+            )
+        }
+    ),
+    responses={200: '구독 정보가 갱신되었습니다.'}
+)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def subscribe_ott(request):
     ott_ids = request.data.get('ott_ids', [])
     if not isinstance(ott_ids, list):
         return Response({'error': 'ott_ids는 리스트여야 합니다.'}, status=400)
-    
+
     user = request.user
-    user.subscribed_ott.set(ott_ids)  # 기존 구독을 대체
+    user.subscribed_ott.set(ott_ids)
     return Response({'message': '구독 정보가 갱신되었습니다.'})
