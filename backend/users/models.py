@@ -22,6 +22,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
+    subscribed_ott = models.ManyToManyField(
+        'ott.OTT',            # 문자열로 참조 (앱 이름이 'ott'인 경우)
+        blank=True,
+        related_name='subscribers',
+        verbose_name='구독 중인 OTT'
+    )
+
     objects = UserManager()
 
     USERNAME_FIELD = 'email'

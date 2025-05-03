@@ -5,8 +5,10 @@ from .serializers import RegisterSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from ott.models import OTT
 
 
 class RegisterView(APIView):
@@ -38,3 +40,14 @@ class ProfileView(APIView):
             "email": user.email,
             "username": user.username,
         })
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def subscribe_ott(request):
+    ott_ids = request.data.get('ott_ids', [])
+    if not isinstance(ott_ids, list):
+        return Response({'error': 'ott_ids는 리스트여야 합니다.'}, status=400)
+    
+    user = request.user
+    user.subscribed_ott.set(ott_ids)  # 기존 구독을 대체
+    return Response({'message': '구독 정보가 갱신되었습니다.'})

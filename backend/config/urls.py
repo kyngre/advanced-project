@@ -33,5 +33,6 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('api/users/', include('users.urls')),  # 기존 회원가입 경로
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # 로그인
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # 리프레시
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # 리프레시'
+    path('api/ott/', include('ott.urls')), # OTT 앱 경로
 ]

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'users',
     'corsheaders',
+    'ott',  # OTT 앱 추가
 ]
 
 MIDDLEWARE = [
