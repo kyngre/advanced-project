@@ -5,6 +5,9 @@ from .serializers import RegisterSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
 
 class RegisterView(APIView):
     @swagger_auto_schema(
@@ -25,3 +28,13 @@ class RegisterView(APIView):
             serializer.save()
             return Response({"message": "회원가입 성공!"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class ProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        return Response({
+            "email": user.email,
+            "username": user.username,
+        })

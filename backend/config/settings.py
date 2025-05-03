@@ -142,6 +142,8 @@ SWAGGER_SETTINGS = {
             'type': 'apiKey',
             'name': 'Authorization',
             'in': 'header',
+            'scheme': 'Bearer',
+            'bearerFormat': 'JWT',
             'description': 'JWT 인증 (예: Bearer <토큰>)',
         }
     }
