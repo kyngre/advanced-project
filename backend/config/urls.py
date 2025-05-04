@@ -53,4 +53,7 @@ urlpatterns = [
 
     # ✅ 리뷰 + 댓글 + 좋아요 API
     path('api/reviews/', include('reviews.urls')),
+
+    # ✅ 커뮤니티 게시판 API
+    path('api/board/', include('board.urls')),
 ]
