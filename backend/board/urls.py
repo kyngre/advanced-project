@@ -4,6 +4,8 @@ from .views import (
     BoardPostDetailView,
     BoardCommentListCreateView,
     BoardCommentDestroyView,
+    BoardPostLikeToggleView,
+    BoardCommentLikeToggleView,
 )
 
 urlpatterns = [
@@ -18,4 +20,6 @@ urlpatterns = [
 
     # 댓글 삭제 (작성자만)
     path('comments/<int:pk>/', BoardCommentDestroyView.as_view(), name='boardcomment-delete'),
+    path('posts/<int:pk>/like/', BoardPostLikeToggleView.as_view(), name='post-like'),
+    path('comments/<int:pk>/like/', BoardCommentLikeToggleView.as_view(), name='comment-like'),
 ]

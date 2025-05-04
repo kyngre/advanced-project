@@ -1,11 +1,15 @@
 from rest_framework import generics, permissions
-from .models import BoardPost, BoardComment
+from .models import BoardPost, BoardComment, BoardPostLike, BoardCommentLike
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 from .serializers import BoardPostSerializer, BoardCommentSerializer
 from rest_framework.permissions import IsAuthenticated
 from reviews.permissions import IsOwnerOrReadOnly  # 기존 권한 재사용
 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+
 
 
 # ✅ 게시글 목록 조회 + 작성
@@ -94,3 +98,29 @@ class BoardCommentDestroyView(generics.DestroyAPIView):
     @swagger_auto_schema(operation_summary="댓글 삭제")
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
+    
+class BoardPostLikeToggleView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        post = get_object_or_404(BoardPost, pk=pk)
+        is_like = request.data.get('is_like')
+
+        like_obj, created = BoardPostLike.objects.update_or_create(
+            user=request.user, post=post,
+            defaults={'is_like': is_like}
+        )
+        return Response({'status': 'updated', 'is_like': is_like})
+
+class BoardCommentLikeToggleView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        comment = get_object_or_404(BoardComment, pk=pk)
+        is_like = request.data.get('is_like')
+
+        like_obj, created = BoardCommentLike.objects.update_or_create(
+            user=request.user, comment=comment,
+            defaults={'is_like': is_like}
+        )
+        return Response({'status': 'updated', 'is_like': is_like})

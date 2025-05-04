@@ -22,3 +22,21 @@ class BoardComment(models.Model):
 
     def __str__(self):
         return f"{self.user.username}: {self.content[:20]}"
+    
+class BoardPostLike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(BoardPost, on_delete=models.CASCADE, related_name='likes')
+    is_like = models.BooleanField()  # True: 추천, False: 비추천
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'post')
+
+class BoardCommentLike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.ForeignKey(BoardComment, on_delete=models.CASCADE, related_name='likes')
+    is_like = models.BooleanField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'comment')
