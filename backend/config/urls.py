@@ -35,4 +35,5 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # 로그인
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # 리프레시'
     path('api/ott/', include('ott.urls')), # OTT 앱 경로
+    path('api/movies/', include('movies.urls')),  # 영화 앱 경로
 ]

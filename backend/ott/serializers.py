@@ -5,3 +5,4 @@ class OTTSerializer(serializers.ModelSerializer):
     class Meta:
         model = OTT
         fields = ['id', 'name', 'logo_url']
+        ref_name = 'OTTApp_OTT'
