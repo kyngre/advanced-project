@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Movie
 from ott.models import OTT
+from reviews.serializers import ReviewSerializer
 
 class OTTSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,6 +14,7 @@ class MovieSerializer(serializers.ModelSerializer):
         many=True,
         queryset=OTT.objects.all()
     )
+    reviews = ReviewSerializer(many=True, read_only=True)
 
     class Meta:
         model = Movie
