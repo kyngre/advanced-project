@@ -7,6 +7,7 @@ from .serializers import BoardPostSerializer, BoardCommentSerializer
 from rest_framework.permissions import IsAuthenticated
 from reviews.permissions import IsOwnerOrReadOnly  # 기존 권한 재사용
 
+from django.db import models
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
