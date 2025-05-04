@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics, permissions
-from .models import Review, ReviewLike
-from .serializers import ReviewSerializer
+from .models import Review, ReviewLike, ReviewComment
+from .serializers import ReviewSerializer, ReviewCommentSerializer, ReviewLikeSerializer
 from .permissions import IsOwnerOrReadOnly
 from rest_framework.permissions import IsAuthenticated
 
@@ -42,3 +42,21 @@ class ReviewLikeToggleView(APIView):
             return Response({'liked': False}, status=200)
         else:
             return Response({'liked': True}, status=201)
+
+# 댓글 목록 + 생성
+class ReviewCommentListCreateView(generics.ListCreateAPIView):
+    serializer_class = ReviewCommentSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        review_id = self.kwargs.get('review_id')
+        return ReviewComment.objects.filter(review_id=review_id)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+# 댓글 삭제 (작성자만 가능)
+class ReviewCommentDestroyView(generics.DestroyAPIView):
+    queryset = ReviewComment.objects.all()
+    serializer_class = ReviewCommentSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
