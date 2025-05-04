@@ -11,7 +11,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 
-# ✅ 회원가입 API
+# ✅ 회원가입 API 클래스
 class RegisterView(APIView):
     @swagger_auto_schema(
         operation_summary="회원가입",
@@ -25,12 +25,14 @@ class RegisterView(APIView):
                 "password": openapi.Schema(type=openapi.TYPE_STRING, format="password", description="비밀번호"),
             },
         ),
-        responses={201: openapi.Response(description="회원가입 성공")},
+        responses={201: openapi.Response(description="회원가입 성공")}
     )
     def post(self, request):
         """
         POST /api/users/register/
-        새로운 사용자를 생성합니다.
+
+        사용자가 이메일, 사용자명, 비밀번호를 입력하여 회원가입을 진행합니다.
+        유효성 검사를 통과한 경우 새 계정을 생성하고 201 응답을 반환합니다.
         """
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
@@ -39,7 +41,7 @@ class RegisterView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# ✅ 사용자 프로필 조회 API (로그인 필요)
+# ✅ 로그인한 사용자의 프로필 조회
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -59,7 +61,9 @@ class ProfileView(APIView):
     def get(self, request):
         """
         GET /api/users/profile/
-        로그인한 사용자의 정보를 반환합니다.
+
+        현재 로그인한 사용자의 이메일과 사용자명을 반환합니다.
+        인증이 필요한 API입니다.
         """
         user = request.user
         return Response({
@@ -68,11 +72,11 @@ class ProfileView(APIView):
         })
 
 
-# ✅ OTT 구독 설정 API (로그인 필요)
+# ✅ OTT 구독 설정 API (사용자별로 구독한 OTT 목록을 설정)
 @swagger_auto_schema(
     method='post',
     operation_summary="OTT 구독 설정",
-    operation_description="사용자가 구독할 OTT 플랫폼 목록을 설정합니다.",
+    operation_description="사용자가 구독할 OTT 플랫폼 ID 목록을 설정합니다.",
     request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
         required=['ott_ids'],
@@ -94,7 +98,9 @@ class ProfileView(APIView):
 def subscribe_ott(request):
     """
     POST /api/users/subscribe/
-    사용자에게 OTT 구독 정보를 설정합니다.
+
+    현재 로그인한 사용자가 구독할 OTT 플랫폼 목록을 설정합니다.
+    전달된 ott_ids가 유효하면 사용자와 OTT 관계를 갱신합니다.
     """
     ott_ids = request.data.get('ott_ids', [])
     if not isinstance(ott_ids, list):
