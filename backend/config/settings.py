@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'ott',  # OTT 앱 추가
     'movies',  # 영화 앱 추가
     'reviews',  # 리뷰 앱 추가
+    'board', # 게시판 앱 추가
 ]
 
 MIDDLEWARE = [
