@@ -8,6 +8,7 @@ class Movie(models.Model):
     release_date = models.DateField()
     thumbnail_url = models.URLField(blank=True, null=True)
     ott_services = models.ManyToManyField(OTT, related_name='movies')
+    average_rating = models.FloatField(default=0.0)
 
     def average_rating(self):
         return self.reviews.aggregate(avg=Avg('rating'))['avg'] or 0

@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from movies.models import Movie
+from movies.models import Movie, Avg
 
 User = get_user_model()
 
@@ -10,6 +10,17 @@ class Review(models.Model):
     rating = models.IntegerField()
     comment = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.movie.average_rating = self.movie.reviews.aggregate(avg=Avg('rating'))['avg'] or 0
+        self.movie.save()
+
+    def delete(self, *args, **kwargs):
+        movie = self.movie
+        super().delete(*args, **kwargs)
+        movie.average_rating = movie.reviews.aggregate(avg=Avg('rating'))['avg'] or 0
+        movie.save()
 
     def __str__(self):
         return f"{self.user.username} - {self.movie.title} ({self.rating}점)"
