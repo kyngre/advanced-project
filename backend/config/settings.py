@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'users',
     'corsheaders',
     'ott',  # OTT 앱 추가
-    'movies',
+    'movies',  # 영화 앱 추가
+    'reviews',  # 리뷰 앱 추가
 ]
 
 MIDDLEWARE = [
