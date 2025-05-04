@@ -8,3 +8,8 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ['id', 'user', 'movie', 'rating', 'comment', 'created_at']
+
+class ReviewLikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReviewLike
+        fields = ['id', 'user', 'review', 'created_at']
