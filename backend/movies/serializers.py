@@ -15,7 +15,12 @@ class MovieSerializer(serializers.ModelSerializer):
         queryset=OTT.objects.all()
     )
     reviews = ReviewSerializer(many=True, read_only=True)
+    average_rating = serializers.SerializerMethodField()
 
     class Meta:
         model = Movie
-        fields = ['id', 'title', 'description', 'release_date', 'thumbnail_url', 'ott_services']
+        fields = ['id', 'title', 'description', 'release_date', 'thumbnail_url', 'ott_services'
+                  , 'reviews', 'average_rating']
+        
+    def get_average_rating(self, obj):
+        return round(obj.average_rating(), 1)
