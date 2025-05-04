@@ -53,7 +53,9 @@ class ReviewCommentListCreateView(generics.ListCreateAPIView):
         return ReviewComment.objects.filter(review_id=review_id)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        review_id = self.kwargs.get('review_id')
+        review = Review.objects.get(pk=review_id)  # ← 실제 Review 객체 가져오기
+        serializer.save(user=self.request.user, review=review)
 
 # 댓글 삭제 (작성자만 가능)
 class ReviewCommentDestroyView(generics.DestroyAPIView):

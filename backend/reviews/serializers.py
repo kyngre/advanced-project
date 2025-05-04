@@ -24,3 +24,4 @@ class ReviewCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewComment
         fields = ['id', 'user', 'review', 'content', 'created_at']
+        read_only_fields = ['user', 'review', 'created_at']
