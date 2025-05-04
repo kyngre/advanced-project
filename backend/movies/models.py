@@ -2,7 +2,6 @@ from django.db import models
 from ott.models import OTT
 from django.db.models import Avg
 
-
 # ✅ 영화 모델 정의
 class Movie(models.Model):
     title = models.CharField(
