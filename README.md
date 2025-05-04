@@ -42,12 +42,94 @@
 
 ---
 
-## 📁 프로젝트 구조 (백엔드 기준)
+## 📁 프로젝트 구조 (백엔드 기준 예시)
 
+```
 backend/
-├── users/ # 사용자 기능 (회원가입, 프로필, 구독)
-├── movies/ # 영화 모델 및 API
-├── reviews/ # 리뷰, 댓글, 좋아요
-├── ott/ # OTT 플랫폼 관리
-├── config/ # 프로젝트 설정
-├── manage.py
+├── config/                     # Django 프로젝트 설정 폴더
+│   ├── settings.py             # 전체 설정
+│   ├── urls.py                 # 전역 URL 라우팅
+│   └── wsgi.py / asgi.py       # 배포용 설정
+│
+├── users/                      # 사용자 앱
+│   ├── models.py               # 사용자 모델 (AbstractUser 확장 가능)
+│   ├── views.py                # 회원가입, 프로필, 구독 API
+│   ├── serializers.py
+│   ├── urls.py
+│   └── permissions.py
+│
+├── movies/                     # 영화 앱
+│   ├── models.py               # 영화 + OTT ManyToMany
+│   ├── views.py                # 조회, 등록, 정렬 등
+│   ├── serializers.py
+│   └── urls.py
+│
+├── reviews/                    # 리뷰 + 댓글 + 좋아요
+│   ├── models.py
+│   ├── views.py
+│   ├── serializers.py
+│   ├── permissions.py
+│   └── urls.py
+│
+├── ott/                        # OTT 플랫폼 (넷플릭스 등)
+│   ├── models.py
+│   ├── serializers.py
+│   └── urls.py
+│
+├── manage.py                   # Django 실행 파일
+├── requirements.txt            # 패키지 목록
+└── db.sqlite3 (또는 PostgreSQL 사용 가능)
+```
+
+---
+
+## 🚀 실행 방법
+
+### 1. 가상환경 설치 및 패키지 설치
+
+```bash
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+### 2. 마이그레이션 및 서버 실행
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+```
+
+### 3. Swagger 접속
+
+```
+http://localhost:8000/swagger/
+```
+
+---
+
+## 🔐 JWT 인증 사용법 (Swagger에서)
+
+1. `/api/token/`에서 access, refresh 토큰 발급
+2. Swagger 우측 상단 Authorize 클릭
+3. `Bearer <access_token>` 형식으로 입력 후 인증
+
+---
+
+## 🛠 향후 계획
+
+- React 기반 프론트엔드 연동
+- 관리자 페이지 커스터마이징
+- Docker 배포 자동화
+
+---
+
+## 🙌 기여 방법
+
+1. 이 저장소를 fork 합니다.
+2. 새로운 브랜치를 만듭니다 (`git checkout -b feature/my-feature`)
+3. 변경사항을 커밋합니다 (`git commit -m 'Add my feature'`)
+4. PR을 보냅니다!
+
+---
