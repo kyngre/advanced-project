@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'movies',  # 영화 앱 추가
     'reviews',  # 리뷰 앱 추가
     'board', # 게시판 앱 추가
+    'django_filters',  # 필터링을 위한 Django Filter 추가
 ]
 
 MIDDLEWARE = [
@@ -137,6 +138,10 @@ AUTH_USER_MODEL = 'users.User'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
     ),
 }
 

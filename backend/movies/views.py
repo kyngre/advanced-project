@@ -6,6 +6,11 @@ from drf_yasg import openapi
 from .models import Movie
 from .serializers import MovieSerializer
 
+from .filters import MovieFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
+from rest_framework.generics import ListAPIView
+
 
 # ✅ 영화 목록 조회 API (정렬 포함)
 class MovieListView(generics.ListAPIView):
@@ -110,3 +115,10 @@ class MovieDetailEditDeleteView(generics.RetrieveUpdateDestroyAPIView):
     @swagger_auto_schema(operation_summary="영화 삭제")
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
+    
+class MovieSearchView(ListAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+    filter_backends = [SearchFilter, DjangoFilterBackend]
+    search_fields = ['title']
+    filterset_class = MovieFilter
