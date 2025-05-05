@@ -84,6 +84,29 @@
 ![Swagger UI 스크린샷](docs/images/swagger.png)
 ![Swagger UI 스크린샷](docs/images/swagger2.png)
 
+## 📦 API 요약
+
+| 기능 구분     | 메서드 | 엔드포인트 URL                     | 설명                                      |
+|--------------|--------|-----------------------------------|-------------------------------------------|
+| 🔐 회원가입    | POST   | `/api/users/register/`            | 사용자 회원가입                          |
+| 🔐 로그인      | POST   | `/api/token/`                     | JWT access/refresh 토큰 발급              |
+| 👤 프로필 조회 | GET    | `/api/users/profile/`             | 현재 로그인한 사용자 정보 조회            |
+| 📺 OTT 목록   | GET    | `/api/ott/`                       | 등록된 OTT 플랫폼 목록 조회               |
+| 🎥 영화 목록   | GET    | `/api/movies/`                    | 영화 목록 조회 (정렬 기능 포함)           |
+| 🎥 영화 등록   | POST   | `/api/movies/`                    | 영화 등록 (OTT 연결 포함)                 |
+| 🎥 영화 상세   | GET    | `/api/movies/{id}/`               | 특정 영화 상세 조회                       |
+| 🎥 영화 수정   | PUT    | `/api/movies/{id}/`               | 영화 정보 수정                            |
+| 🎥 영화 삭제   | DELETE | `/api/movies/{id}/`               | 영화 삭제                                 |
+| 🔍 영화 검색   | GET    | `/api/movies/search/`             | 제목 검색 + OTT 필터링                    |
+| 📝 리뷰 작성   | POST   | `/api/reviews/`                   | 특정 영화에 대한 리뷰 작성                |
+| 📝 리뷰 수정   | PUT    | `/api/reviews/{id}/`              | 리뷰 수정                                 |
+| 📝 리뷰 삭제   | DELETE | `/api/reviews/{id}/`              | 리뷰 삭제                                 |
+| ❤️ 리뷰 좋아요 | POST   | `/api/review-likes/`              | 리뷰 좋아요 등록                          |
+| 💬 리뷰 댓글   | POST   | `/api/review-comments/`           | 리뷰에 댓글 작성                          |
+| 📝 게시글 작성 | POST   | `/api/board/posts/`               | 게시판 글 작성                            |
+| 📝 게시글 목록 | GET    | `/api/board/posts/`               | 게시판 목록 조회                          |
+| 💬 게시글 댓글 | POST   | `/api/board/comments/`            | 게시글에 대한 댓글 작성                   |
+
 ### ⚙️ 시스템 설정 및 성능 최적화
 - **CORS 설정 완료 (React 연동 대비)**
 - **django_filters 설정 완료**
