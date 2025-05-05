@@ -13,14 +13,18 @@ class Review(models.Model):
     rating = models.IntegerField()  # 평점 (1~5 사이 권장)
     comment = models.TextField(blank=True)  # 선택적 코멘트
     created_at = models.DateTimeField(auto_now_add=True)  # 생성 일시
+    updated_at = models.DateTimeField(auto_now=True)  # 수정 일시
 
     def save(self, *args, **kwargs):
         """
         저장 시 해당 영화의 평균 평점을 자동으로 갱신
         """
-        super().save(*args, **kwargs)
-        # 평균 평점 계산 후, 영화의 평점 캐시를 갱신
-        self.movie.update_average_rating()
+        is_new_review = self._state.adding  # 새로운 리뷰인지 확인
+        super().save(*args, **kwargs)  # 리뷰 저장
+
+        # 새로운 리뷰가 추가되거나 수정될 때마다 영화의 평균 평점을 갱신
+        if is_new_review or self._state.db == 'default':
+            self.movie.update_average_rating()
 
     def delete(self, *args, **kwargs):
         """
