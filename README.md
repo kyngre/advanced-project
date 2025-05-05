@@ -59,7 +59,7 @@
 - **Review 모델: 평점, 코멘트, 작성자, 영화 연결**
 - **ReviewLike 모델: 사용자-리뷰 좋아요 (unique_together 제약)**
 - **ReviewComment 모델: 리뷰에 대한 댓글 작성 가능**
-- **리뷰 저장/삭제 시 영화 평균 평점 캐시 자동 갱신 구현 완료**
+- **리뷰 추가/수정/삭제 시 영화 모델의 `average_rating_cache`가 자동으로 갱신되도록 Review 모델의 `save()` 및 `delete()` 오버라이딩**
 - **Django Shell로 테스트 시 캐시 정확히 반영됨 확인**
 
 
@@ -76,8 +76,14 @@
 - **한글 설명 제공**
 - **Swagger UI에서 직접 테스트 가능** (`/swagger/`)
 
-### ✅ 기타 구성 요소
+#### 🔍 Swagger 미리보기
+
+![Swagger UI 스크린샷](docs/images/swagger.png)
+
+### ⚙️ 시스템 설정 및 성능 최적화
 - **CORS 설정 완료 (React 연동 대비)**
+- **django_filters 설정 완료**
+- **REST_FRAMEWORK 설정 정리 완료 (인증, 필터 등)**
 
 ### 🧩 주요 이슈 해결 내역
 - **`average_rating_cache` 필드 마이그레이션 누락 → 정상 반영**
