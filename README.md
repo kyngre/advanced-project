@@ -79,6 +79,7 @@
 #### 🔍 Swagger 미리보기
 
 ![Swagger UI 스크린샷](docs/images/swagger.png)
+![Swagger UI 스크린샷](docs/images/swagger2.png)
 
 ### ⚙️ 시스템 설정 및 성능 최적화
 - **CORS 설정 완료 (React 연동 대비)**
