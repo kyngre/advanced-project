@@ -2,6 +2,9 @@
 
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
 ![Django](https://img.shields.io/badge/Django-REST--Framework-green)
+![React](https://img.shields.io/badge/Frontend-React-61DAFB?logo=react)
+![Stack](https://img.shields.io/badge/Stack-Fullstack-lightgrey)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 > 사용자들이 영화를 검색하고, 리뷰를 작성하고, 커뮤니티에서 소통할 수 있는 웹 애플리케이션입니다.
