@@ -46,4 +46,4 @@ class MovieSerializer(serializers.ModelSerializer):
         """
         리뷰 기반 평균 평점을 계산해 소수점 1자리로 반환
         """
-        return round(obj.average_rating(), 1)
+        return round(obj.calculate_average_rating(), 1)
