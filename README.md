@@ -209,8 +209,23 @@ http://localhost:8000/swagger/
 ## 🔐 JWT 인증 사용법 (Swagger에서)
 
 1. `/api/token/`에서 access, refresh 토큰 발급
-2. Swagger 우측 상단 Authorize 클릭
+2. Swagger 우측 상단 **Authorize** 클릭
 3. `Bearer <access_token>` 형식으로 입력 후 인증
+4. 인증 후 Swagger에서 각 API를 테스트할 수 있습니다.
+
+**예시**:
+- **Access Token 발급 후**: `Bearer <your_access_token>`을 사용하여 요청에 인증을 추가합니다.
+
+---
+## 📜 변경 로그
+
+### v1.0.0 (2025-05-05)
+- 영화 등록, 목록 조회, 수정, 삭제 기능 구현
+- JWT 인증 시스템 추가
+- Swagger UI를 통한 API 테스트 기능 구현
+
+### v0.9.0 (2025-04-28)
+- 기본 영화 모델과 OTT 연결 기능 구현
 
 ---
 
