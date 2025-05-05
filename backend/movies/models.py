@@ -44,6 +44,14 @@ class Movie(models.Model):
         (reviews는 related_name으로 연결되어 있어야 함)
         """
         return self.reviews.aggregate(avg=Avg('rating'))['avg'] or 0
+    
+    def update_average_rating(self):
+        """
+        영화의 평점 캐시를 업데이트합니다.
+        리뷰가 추가/수정될 때마다 호출됩니다.
+        """
+        self.average_rating_cache = self.calculate_average_rating()
+        self.save()
 
     def __str__(self):
         return self.title

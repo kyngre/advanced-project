@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from movies.models import Movie, Avg  # 영화 모델과 평균 집계 함수
+from movies.models import Movie
+from django.db.models import Avg  # 영화 모델의 평균 집계 함수
 
 User = get_user_model()
 
@@ -18,8 +19,8 @@ class Review(models.Model):
         저장 시 해당 영화의 평균 평점을 자동으로 갱신
         """
         super().save(*args, **kwargs)
-        self.movie.average_rating = self.movie.reviews.aggregate(avg=Avg('rating'))['avg'] or 0
-        self.movie.save()
+        # 평균 평점 계산 후, 영화의 평점 캐시를 갱신
+        self.movie.update_average_rating()
 
     def delete(self, *args, **kwargs):
         """
@@ -27,8 +28,7 @@ class Review(models.Model):
         """
         movie = self.movie
         super().delete(*args, **kwargs)
-        movie.average_rating = movie.reviews.aggregate(avg=Avg('rating'))['avg'] or 0
-        movie.save()
+        movie.update_average_rating()
 
     def __str__(self):
         return f"{self.user.username} - {self.movie.title} ({self.rating}점)"

@@ -73,6 +73,10 @@ class MovieCreateView(generics.CreateAPIView):
         ott_ids = self.request.data.get('ott_services', [])
         movie.ott_services.set(ott_ids)
 
+        # 평점 캐시 기본값 설정 (영화 등록 시 평점은 기본값 0으로 설정)
+        movie.average_rating_cache = 0.0
+        movie.save()
+
 
 # ✅ 영화 상세 조회
 class MovieDetailView(generics.RetrieveAPIView):
