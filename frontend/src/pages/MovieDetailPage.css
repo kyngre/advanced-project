@@ -99,3 +99,22 @@
     border: 2px solid gold;
     background-color: #333;
   }
+
+  .review-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  
+  .review-actions button {
+    background-color: #555;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .review-actions button:hover {
+    background-color: #e50914;
+  }
