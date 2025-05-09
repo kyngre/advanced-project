@@ -1,4 +1,4 @@
-.register-container {
+.auth-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -6,7 +6,7 @@
     background-color: #141414;
   }
   
-  .register-box {
+  .auth-box {
     background-color: rgba(0, 0, 0, 0.75);
     padding: 3rem;
     border-radius: 8px;
@@ -14,12 +14,12 @@
     text-align: center;
   }
   
-  .register-box h2 {
+  .auth-box h2 {
     color: white;
     margin-bottom: 2rem;
   }
   
-  .register-box input {
+  .auth-box input {
     width: 100%;
     padding: 0.75rem;
     margin: 0.5rem 0;
@@ -29,7 +29,7 @@
     font-size: 1rem;
   }
   
-  .register-box button {
+  .auth-box button {
     width: 100%;
     padding: 0.75rem;
     background-color: #e50914;
@@ -39,4 +39,16 @@
     border: none;
     margin-top: 1rem;
     cursor: pointer;
+  }
+  
+  .toggle-text {
+    margin-top: 1rem;
+    color: #ccc;
+    font-size: 0.9rem;
+  }
+  
+  .toggle-text span {
+    color: #e50914;
+    cursor: pointer;
+    font-weight: bold;
   }
