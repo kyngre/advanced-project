@@ -113,8 +113,8 @@ advanced-project/
 │   │   │   ├── AuthPage.jsx
 │   │   │   ├── LoginPage.jsx
 │   │   │   ├── RegisterPage.jsx
-│   │   │   ├── MovieDetailPage.jsx (예정)
-│   │   │   └── ReviewPage.jsx (예정)
+│   │   │   ├── MovieDetailPage.jsx
+│   │   │   └── ReviewPage.jsx
 │   │   ├── routes/                # 보호 라우트 컴포넌트
 │   │   │   └── PrivateRoute.jsx
 │   │   ├── App.jsx                # 전체 라우팅 및 상태 관리
@@ -227,7 +227,6 @@ advanced-project/
 이 프로젝트에 기여해 주신 분들:
 
 - [@slimshady913](https://github.com/slimshady913) - 주요 기능 개발, 문서화 및 테스트, 디자인 및 UI 개선
-- [@kyngre](https://github.com/kyngre) - 라이선스 업데이트
 
 기여해 주셔서 감사합니다! 😊
 

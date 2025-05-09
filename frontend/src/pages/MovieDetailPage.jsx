@@ -1,44 +1,57 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import axios from '../api/axios';
+import { useParams } from 'react-router-dom';
+import './MovieDetailPage.css';
 
 const MovieDetailPage = () => {
-  const { id } = useParams(); // URL에서 영화 ID 추출
+  const { id } = useParams();
   const [movie, setMovie] = useState(null);
-  const [error, setError] = useState('');
 
   useEffect(() => {
-    axios.get(`/movies/${id}/`)
-      .then(res => setMovie(res.data))
-      .catch(() => setError('영화 정보를 불러오지 못했습니다.'));
+    const fetchMovieDetail = async () => {
+      try {
+        const response = await axios.get(`/movies/${id}/`);
+        setMovie(response.data);
+      } catch (error) {
+        console.error('영화 정보를 불러오지 못했습니다:', error);
+      }
+    };
+
+    fetchMovieDetail();
   }, [id]);
 
-  if (error) return <div className="p-6 text-red-500">{error}</div>;
-  if (!movie) return <div className="p-6 text-white">로딩 중...</div>;
+  if (!movie) return <div>로딩 중...</div>;
 
   return (
-    <div className="p-6 text-white">
-      <h2 className="text-2xl font-bold mb-4">{movie.title}</h2>
-      <img
-        src={movie.thumbnail_url}
-        alt={movie.title}
-        className="w-full max-w-md rounded-lg mb-4"
-      />
-      <p className="text-gray-300 mb-2">{movie.release_date}</p>
-      <p className="text-yellow-400 mb-4">⭐ {movie.average_rating} / 5</p>
-      <p className="mb-6">{movie.description}</p>
+    <div className="movie-detail-container">
+      <h1>{movie.title}</h1>
+      <img src={movie.thumbnail_url} alt={movie.title} />
+      <p>{movie.description}</p>
 
-      {/* OTT 로고 표시 */}
-      <div className="flex gap-3 mt-4">
-        {movie.ott_services?.map((ott) => (
+      <div className="ott-logos">
+        {movie.ott_list.map(ott => (
           <img
             key={ott.id}
             src={ott.logo_url}
             alt={ott.name}
-            title={ott.name}
-            className="w-8 h-8 rounded"
+            className="ott-logo"
           />
         ))}
+      </div>
+
+      <h2>🎬 리뷰 목록</h2>
+      <div className="reviews">
+        {movie.reviews.length === 0 ? (
+          <p>아직 작성된 리뷰가 없습니다.</p>
+        ) : (
+          movie.reviews.map((review) => (
+            <div key={review.id} className="review-card">
+              <p><strong>작성자:</strong> {review.user}</p>
+              <p><strong>평점:</strong> {review.rating} / 5</p>
+              <p><strong>내용:</strong> {review.comment}</p>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
