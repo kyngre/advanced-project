@@ -1,6 +1,14 @@
 .movie-detail-container {
     padding: 20px;
+    background-color: #141414;
     color: white;
+    min-height: 100vh;
+  }
+  
+  .movie-detail-container img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-bottom: 15px;
   }
   
   .ott-logos {
@@ -14,6 +22,52 @@
     height: auto;
   }
   
+  .review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .review-form label {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    font-size: 0.9rem;
+  }
+  
+  .review-form textarea {
+    resize: vertical;
+    min-height: 60px;
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    background-color: #333;
+    color: white;
+  }
+  
+  .review-form select {
+    padding: 6px;
+    border-radius: 6px;
+    background-color: #333;
+    color: white;
+    border: none;
+  }
+  
+  .review-form button {
+    background-color: #e50914;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .review-form button:disabled {
+    background-color: gray;
+  }
+  
   .reviews {
     margin-top: 20px;
   }
@@ -23,4 +77,5 @@
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 15px;
+    color: white;
   }

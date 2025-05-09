@@ -57,7 +57,7 @@ const MovieDetailPage = () => {
       <p>{movie.description}</p>
 
       <div className="ott-logos">
-        {movie.ott_list.map(ott => (
+        {movie.ott_list?.map(ott => (
           <img
             key={ott.id}
             src={ott.logo_url}
@@ -96,10 +96,10 @@ const MovieDetailPage = () => {
 
       <h2>📃 리뷰 목록</h2>
       <div className="reviews">
-        {movie.reviews.length === 0 ? (
+        {movie.reviews?.length === 0 ? (
           <p>아직 작성된 리뷰가 없습니다.</p>
         ) : (
-          movie.reviews.map((review) => (
+          movie.reviews?.map((review) => (
             <div key={review.id} className="review-card">
               <p><strong>작성자:</strong> {review.user}</p>
               <p><strong>평점:</strong> {review.rating} / 5</p>
