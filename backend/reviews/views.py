@@ -7,23 +7,39 @@ from .serializers import ReviewSerializer, ReviewCommentSerializer, ReviewLikeSe
 from .permissions import IsOwnerOrReadOnly
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from rest_framework.filters import OrderingFilter
 
 
 # ✅ 리뷰 목록 조회 및 리뷰 작성
 class ReviewListCreateView(generics.ListCreateAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]  # 인증된 사용자만 작성 가능, 나머지는 읽기만 가능
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [OrderingFilter]
+    ordering_fields = ['created_at', 'rating', 'like_count']  # 정렬 가능한 필드
+    ordering = ['-created_at']  # 기본 정렬: 최신순
 
-    # Swagger 문서: 리뷰 목록 조회
+    # 리뷰 목록 조회 Swagger 문서화
     @swagger_auto_schema(
         operation_summary="리뷰 목록 조회",
-        operation_description="영화 ID (movie)를 기준으로 리뷰를 필터링할 수 있습니다. 예: `/api/reviews/?movie=1`",
+        operation_description=(
+            "영화 ID(movie)를 기준으로 필터링 가능하며, "
+            "`ordering` 파라미터를 통해 정렬 기준을 선택할 수 있습니다.\n\n"
+            "- `-created_at`: 최신순\n"
+            "- `-like_count`: 추천 많은 순\n"
+            "- `rating`: 낮은 평점순\n"
+        ),
         manual_parameters=[
             openapi.Parameter(
                 'movie',
                 openapi.IN_QUERY,
                 description="필터링할 영화의 ID",
                 type=openapi.TYPE_INTEGER
+            ),
+            openapi.Parameter(
+                'ordering',
+                openapi.IN_QUERY,
+                description="정렬 기준: -created_at, -like_count, rating 등",
+                type=openapi.TYPE_STRING
             )
         ],
         responses={200: ReviewSerializer(many=True)}
@@ -31,7 +47,7 @@ class ReviewListCreateView(generics.ListCreateAPIView):
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
-    # Swagger 문서: 리뷰 작성
+    # 리뷰 작성 Swagger 문서화
     @swagger_auto_schema(
         operation_summary="리뷰 작성",
         operation_description="특정 영화에 대해 평점과 코멘트를 작성합니다. 평점은 1~5 사이여야 합니다.",
@@ -41,14 +57,14 @@ class ReviewListCreateView(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
-    # 쿼리 파라미터로 전달된 movie ID에 따라 필터링된 리뷰 목록 반환
+    # 쿼리 파라미터에 따라 영화 ID로 필터링
     def get_queryset(self):
         movie_id = self.request.query_params.get('movie')
         if movie_id:
             return Review.objects.filter(movie_id=movie_id)
         return Review.objects.all()
 
-    # 리뷰 작성 시 작성자를 현재 로그인한 사용자로 설정
+    # 작성자 자동 설정
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
@@ -146,6 +162,7 @@ class ReviewCommentDestroyView(generics.DestroyAPIView):
     @swagger_auto_schema(operation_summary="댓글 삭제")
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
+    
     
 class ToggleReviewReaction(APIView):
     permission_classes = [IsAuthenticated]
