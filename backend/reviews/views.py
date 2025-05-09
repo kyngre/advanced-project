@@ -8,6 +8,7 @@ from .permissions import IsOwnerOrReadOnly
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.filters import OrderingFilter
+from django.db.models import Count
 
 
 
@@ -125,18 +126,26 @@ class ReviewCommentListCreateView(generics.ListCreateAPIView):
     serializer_class = ReviewCommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    # 특정 리뷰의 댓글만 조회
-    def get_queryset(self):
-        review_id = self.kwargs.get('review_id')
-        return ReviewComment.objects.filter(review_id=review_id)
-
     @swagger_auto_schema(
         operation_summary="댓글 목록 조회",
-        operation_description="특정 리뷰의 댓글 목록을 조회합니다.",
+        operation_description="특정 리뷰의 댓글 목록을 조회합니다.\n\n- 상위 3개 댓글은 추천순으로 표시되며\n- 나머지는 작성 시간순으로 정렬됩니다.",
         responses={200: ReviewCommentSerializer(many=True)}
     )
     def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+        review_id = self.kwargs.get('review_id')
+        comments = ReviewComment.objects.filter(review_id=review_id)
+
+        # 상위 3개 추천순 댓글
+        top_comments = comments.order_by('-like_count', '-created_at')[:3]
+
+        # 나머지 댓글은 시간순
+        remaining_comments = comments.exclude(id__in=top_comments.values_list('id', flat=True)).order_by('created_at')
+
+        # 최종 정렬된 댓글 리스트
+        result = list(top_comments) + list(remaining_comments)
+
+        serializer = self.get_serializer(result, many=True)
+        return Response(serializer.data)
 
     @swagger_auto_schema(
         operation_summary="댓글 작성",
@@ -147,7 +156,7 @@ class ReviewCommentListCreateView(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
-    # 댓글 저장 시 현재 로그인한 사용자 + 해당 리뷰를 명시적으로 저장
+    # 댓글 저장 시 현재 로그인한 사용자 + 해당 리뷰 연결
     def perform_create(self, serializer):
         review_id = self.kwargs.get('review_id')
         review = Review.objects.get(pk=review_id)
