@@ -5,6 +5,7 @@ import Header from './components/Header.jsx';
 import AuthPage from './pages/AuthPage.jsx';
 import PrivateRoute from './routes/PrivateRoute.jsx';
 import MoviesPage from './pages/MoviesPage.jsx'; // 영화 목록 페이지
+import MovieDetailPage from './pages/MovieDetailPage.jsx';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -61,6 +62,7 @@ function App() {
 
         {/* ✅ 로그인 / 회원가입 */}
         <Route path="/auth" element={<AuthPage onLoginSuccess={initializeAuth} />} />
+        <Route path="/movies/:id" element={<MovieDetailPage />} />
       </Routes>
     </Router>
   );
