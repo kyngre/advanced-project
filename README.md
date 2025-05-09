@@ -16,8 +16,6 @@
 - [🔧 주요 기능](#-주요-기능)
 - [🗂 기술 스택](#-기술-스택)
 - [📁 프로젝트 구조](#-프로젝트-구조-백엔드-기준-예시)
-- [🚀 실행 방법](#-실행-방법)
-- [🔐 JWT 인증 사용법](#-jwt-인증-사용법-swagger에서)
 - [📜 변경 로그](#-변경-로그)
 - [🛠 향후 계획](#-향후-계획)
 - [📊 프로젝트 일정 (Gantt Chart)](#-프로젝트-일정-gantt-chart)
@@ -33,7 +31,7 @@
 
 - [🛠 백엔드 README](./backend/README.md)
   - [백엔드 실행 방법](https://github.com/Slimshady913/advanced-project/blob/main/backend/README.md#-실행-방법)
-  - [Swagger 인증 사용법](https://github.com/Slimshady913/advanced-project/blob/main/backend/README.md#-swagger-인증-사용법)
+  - [Swagger 인증 사용법](https://github.com/Slimshady913/advanced-project/blob/main/backend/README.md#-JWT 인증 사용법 (Swagger에서))
 
 ### ✅ frontend
 
@@ -128,20 +126,28 @@ advanced-project/
 ---
 
 ## 📜 변경 로그
+### v0.0.2 (2025-05-12)
+- frontend, backend 연결 확인
+- frontend 회원가입 및 로그인 페이지 구현
+- README 파일 backend/frontend 분리
 
-### v1.0.0 (2025-05-05)
+### v0.0.1 (2025-05-05)
 - 영화 등록, 목록 조회, 수정, 삭제 기능 구현
 - JWT 인증 시스템 추가
-- Swagger UI를 통한 API 테스트 기능 구현
+- Swagger UI를 통한 API 테스트 기능 구현 등
+- 전반적인 API 기능 구현
 
-### v0.9.0 (2025-04-28)
+### v0.0.0 (2025-04-28)
+- 프로젝트 계획 및 구조 설계
+- frontend, backend 구조 생성성
 - 기본 영화 모델과 OTT 연결 기능 구현
 
 ---
 
 ## 🛠 향후 계획
 
-- React 기반 프론트엔드 연동
+- React 기반 프론트엔드 연동(진행중)
+- backend 기능 안정화
 - Django Admin 페이지 커스터마이징
 - Docker 배포 자동화
 
