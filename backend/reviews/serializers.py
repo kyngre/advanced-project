@@ -17,12 +17,18 @@ class ReviewSerializer(serializers.ModelSerializer):
     # 좋아요 개수 계산용 read-only 필드
     like_count = serializers.SerializerMethodField(help_text="이 리뷰에 달린 좋아요 수")
 
+    is_edited = serializers.SerializerMethodField(help_text="리뷰가 수정된 적이 있는지 여부")
+
     def get_like_count(self, obj):
         return obj.likes.count()
+    
+    def get_is_edited(self, obj):
+        return obj.histories.exists()
 
     class Meta:
         model = Review
-        fields = ['id', 'user', 'movie', 'rating', 'comment', 'created_at', 'like_count']
+        fields = ['id', 'user', 'movie', 'rating', 'comment', 'created_at', 'like_count', 'is_edited']
+        read_only_fields = ['user', 'created_at', 'like_count', 'is_edited']
 
 
 # ✅ 리뷰 좋아요 Serializer: 내부 처리용 (Swagger에 직접 노출되진 않음)
