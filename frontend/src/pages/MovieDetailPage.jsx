@@ -26,7 +26,7 @@ const MovieDetailPage = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const token = localStorage.getItem('access'); // JWT 토큰
+      const token = localStorage.getItem('access');
       await axios.post(
         `/reviews/`,
         {
@@ -41,11 +41,34 @@ const MovieDetailPage = () => {
         }
       );
       setNewReview({ rating: 5, comment: '' });
-      fetchMovieDetail(); // 리뷰 다시 불러오기
+      fetchMovieDetail();
     } catch (error) {
       console.error('리뷰 작성 실패:', error);
     }
     setIsSubmitting(false);
+  };
+
+  const handleLike = async (reviewId) => {
+    const token = localStorage.getItem('access');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+
+    try {
+      await axios.post(
+        `/reviews/${reviewId}/like/`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      fetchMovieDetail(); // 추천 후 리뷰 목록 갱신
+    } catch (error) {
+      console.error('좋아요 실패:', error);
+    }
   };
 
   if (!movie) return <div>로딩 중...</div>;
@@ -104,6 +127,9 @@ const MovieDetailPage = () => {
               <p><strong>작성자:</strong> {review.user}</p>
               <p><strong>평점:</strong> {review.rating} / 5</p>
               <p><strong>내용:</strong> {review.comment}</p>
+              <button onClick={() => handleLike(review.id)}>
+                👍 {review.like_count}
+              </button>
             </div>
           ))
         )}

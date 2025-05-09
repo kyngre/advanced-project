@@ -79,3 +79,18 @@
     margin-bottom: 15px;
     color: white;
   }
+
+  .review-card button {
+    margin-top: 10px;
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+  .review-card button:hover {
+    background-color: #e50914;
+  }
