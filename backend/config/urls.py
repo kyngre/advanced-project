@@ -1,6 +1,9 @@
 from django.contrib import admin
 from django.urls import path, include
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 # REST framework 권한 설정
 from rest_framework import permissions
 
@@ -56,4 +59,9 @@ urlpatterns = [
 
     # ✅ 커뮤니티 게시판 API
     path('api/board/', include('board.urls')),
+
 ]
+
+# 개발 모드일 경우 미디어 파일 서빙 허용
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -97,3 +97,11 @@ class ReviewHistory(models.Model):
 
     def __str__(self):
         return f"Review {self.review.id} edited by {self.user.username} at {self.edited_at}"
+    
+class ReviewImage(models.Model):
+    review = models.ForeignKey('Review', on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='review_images/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Image for Review {self.review.id}"

@@ -1,6 +1,12 @@
 from rest_framework import serializers
-from .models import Review, ReviewHistory, ReviewLike, ReviewComment, ReviewReaction,  ReviewCommentReaction
+from .models import Review, ReviewHistory, ReviewImage, ReviewLike, ReviewComment, ReviewReaction,  ReviewCommentReaction
 
+
+class ReviewImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReviewImage
+        fields = ['id', 'image', 'uploaded_at']
+        read_only_fields = ['id', 'uploaded_at']
 
 # ✅ 리뷰 Serializer: 영화에 대한 평점 및 코멘트 작성/조회
 class ReviewSerializer(serializers.ModelSerializer):
@@ -24,6 +30,8 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     is_edited = serializers.SerializerMethodField(help_text="리뷰가 수정된 적이 있는지 여부")
 
+    images = ReviewImageSerializer(many=True, read_only=True)
+
     def get_like_count(self, obj):
         return obj.likes.count()
     
@@ -32,7 +40,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        fields = ['id', 'user', 'movie', 'rating', 'comment', 'is_spoiler', 'created_at', 'like_count', 'is_edited']
+        fields = ['id', 'user', 'movie', 'rating', 'comment', 'is_spoiler', 'created_at', 'like_count', 'is_edited', 'images']
         read_only_fields = ['user', 'created_at', 'like_count', 'is_edited']
 
 

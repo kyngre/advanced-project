@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from .models import Review, ReviewCommentReaction, ReviewHistory, ReviewLike, ReviewComment, ReviewReaction
-from .serializers import ReviewSerializer, ReviewCommentSerializer, ReviewLikeSerializer, ReviewReactionSerializer
+from .serializers import ReviewImageSerializer, ReviewSerializer, ReviewCommentSerializer, ReviewLikeSerializer, ReviewReactionSerializer
 from .permissions import IsOwnerOrReadOnly
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -276,3 +276,12 @@ class ReviewHistoryListView(generics.ListAPIView):
     def get_queryset(self):
         review_id = self.kwargs.get('review_id')
         return ReviewHistory.objects.filter(review_id=review_id).order_by('-edited_at')
+    
+class ReviewImageUploadView(generics.CreateAPIView):
+    serializer_class = ReviewImageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        review_id = self.kwargs.get('review_id')
+        review = Review.objects.get(id=review_id)
+        serializer.save(review=review)
