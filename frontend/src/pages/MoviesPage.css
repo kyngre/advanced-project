@@ -66,3 +66,34 @@
     border: none;
     font-size: 0.9rem;
   }
+
+  .review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .review-form label {
+    display: flex;
+    flex-direction: column;
+    color: white;
+  }
+  
+  .review-form textarea {
+    resize: vertical;
+    min-height: 60px;
+  }
+  
+  .review-form button {
+    background-color: #e50914;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .review-form button:disabled {
+    background-color: gray;
+  }
