@@ -59,9 +59,21 @@ class ReviewComment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # 댓글 작성자
     content = models.TextField()  # 댓글 내용
     created_at = models.DateTimeField(auto_now_add=True)
+    like_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f"{self.user.username}: {self.content[:20]}"
+    
+class ReviewCommentReaction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.ForeignKey('ReviewComment', on_delete=models.CASCADE, related_name='reactions')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'comment')
+
+    def __str__(self):
+        return f"{self.user} 👍 Comment {self.comment.id}"
     
 class ReviewReaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
