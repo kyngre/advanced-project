@@ -65,13 +65,21 @@ const MovieDetailPage = () => {
           },
         }
       );
-      fetchMovieDetail(); // 추천 후 리뷰 목록 갱신
+      fetchMovieDetail();
     } catch (error) {
       console.error('좋아요 실패:', error);
     }
   };
 
   if (!movie) return <div>로딩 중...</div>;
+
+  const top3Reviews = [...(movie.reviews || [])]
+    .sort((a, b) => b.like_count - a.like_count)
+    .slice(0, 3);
+
+  const otherReviews = (movie.reviews || []).filter(
+    (review) => !top3Reviews.find((top) => top.id === review.id)
+  );
 
   return (
     <div className="movie-detail-container">
@@ -117,12 +125,30 @@ const MovieDetailPage = () => {
         </button>
       </form>
 
-      <h2>📃 리뷰 목록</h2>
+      <h2>🎖️ Top 3 리뷰</h2>
       <div className="reviews">
-        {movie.reviews?.length === 0 ? (
-          <p>아직 작성된 리뷰가 없습니다.</p>
+        {top3Reviews.length === 0 ? (
+          <p>아직 추천된 리뷰가 없습니다.</p>
         ) : (
-          movie.reviews?.map((review) => (
+          top3Reviews.map((review) => (
+            <div key={review.id} className="review-card top-review">
+              <p><strong>작성자:</strong> {review.user}</p>
+              <p><strong>평점:</strong> {review.rating} / 5</p>
+              <p><strong>내용:</strong> {review.comment}</p>
+              <button onClick={() => handleLike(review.id)}>
+                👍 {review.like_count}
+              </button>
+            </div>
+          ))
+        )}
+      </div>
+
+      <h2>📝 다른 리뷰</h2>
+      <div className="reviews">
+        {otherReviews.length === 0 ? (
+          <p>다른 리뷰가 없습니다.</p>
+        ) : (
+          otherReviews.map((review) => (
             <div key={review.id} className="review-card">
               <p><strong>작성자:</strong> {review.user}</p>
               <p><strong>평점:</strong> {review.rating} / 5</p>

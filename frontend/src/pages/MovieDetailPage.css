@@ -94,3 +94,8 @@
   .review-card button:hover {
     background-color: #e50914;
   }
+
+  .top-review {
+    border: 2px solid gold;
+    background-color: #333;
+  }
