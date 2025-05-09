@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import LoginPage from './pages/LoginPage.jsx';
 import Header from './components/Header.jsx';
+import RegisterPage from './pages/RegisterPage.jsx';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -43,6 +44,7 @@ function App() {
       />
       <Routes>
         <Route path="/login" element={<LoginPage onLoginSuccess={initializeAuth} />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/" element={<h2>홈입니다 🎬</h2>} />
       </Routes>
     </Router>
