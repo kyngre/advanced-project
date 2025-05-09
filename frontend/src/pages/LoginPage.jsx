@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios.js';
+import './LoginPage.css'; // ✅ 스타일 연결
 
 function LoginPage({ onLoginSuccess }) {
   const [email, setEmail] = useState('');
@@ -13,21 +14,19 @@ function LoginPage({ onLoginSuccess }) {
       const res = await axios.post('/token/', { email, password });
       localStorage.setItem('accessToken', res.data.access);
       alert('로그인 성공!');
-      onLoginSuccess();        // ✅ 부모에게 로그인 상태 갱신 요청
-      navigate('/');           // ✅ 홈으로 이동
+      onLoginSuccess();
+      navigate('/');
     } catch (err) {
       alert('로그인 실패');
     }
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h2>🔐 로그인</h2>
-      <form onSubmit={handleLogin}>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <br />
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <br />
+    <div className="login-container">
+      <form className="login-box" onSubmit={handleLogin}>
+        <h2>로그인</h2>
+        <input type="email" placeholder="이메일 주소" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} required />
         <button type="submit">로그인</button>
       </form>
     </div>
