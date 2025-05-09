@@ -1,14 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage.jsx';
+import Header from './components/Header.jsx';
 
 function App() {
   return (
     <Router>
+      <Header />
       <Routes>
-        <Route path="/" element={<h1>홈입니다</h1>} />
         <Route path="/login" element={<LoginPage />} />
-        {/* 나중에 영화 목록 등 다른 페이지도 추가 가능 */}
+        <Route path="/" element={<h2>🎬 홈입니다. 로그인 상태 유지 테스트!</h2>} />
       </Routes>
     </Router>
   );
