@@ -271,7 +271,7 @@ http://localhost:8000/swagger/
 이 프로젝트에 기여해 주신 분들:
 
 - [@slimshady913](https://github.com/slimshady913) - 주요 기능 개발, 문서화 및 테스트, 디자인 및 UI 개선
-- [@kyngre](https://github.com/kyngre) - 라이센스
+- [@kyngre](https://github.com/kyngre) - 라이센스 업데이트
 
 기여해 주셔서 감사합니다! 😊
 
