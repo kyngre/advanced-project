@@ -55,7 +55,7 @@
 
 #### 🔍 Swagger 미리보기
 
-![Swagger UI 스크린샷](advanced-project/docs/images/swagger.png)
+![Swagger UI 스크린샷](docs/images/swagger.png)
 ![Swagger UI 스크린샷](docs/images/swagger2.png)
 
 ## 📦 API 요약
