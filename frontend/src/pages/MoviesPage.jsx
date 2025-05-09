@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from '../api/axios'; // ← 반드시 로컬 axios 인스턴스 사용
+import axios from '../api/axios';
+import './MoviesPage.css'; // ✅ CSS 파일 import
 
 const MoviesPage = () => {
   const [movies, setMovies] = useState([]);
@@ -15,23 +16,25 @@ const MoviesPage = () => {
   }, []);
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">🎬 영화 목록</h2>
+    <div className="movies-page">
+      <h2 style={{ fontSize: '1.75rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+        🎬 지금 볼 수 있는 영화
+      </h2>
 
-      {error && <p className="text-red-500">{error}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="movies-grid">
         {movies.map((movie) => (
-          <div key={movie.id} className="bg-white shadow rounded-lg overflow-hidden">
+          <div key={movie.id} className="movie-card">
             <img
               src={movie.thumbnail_url}
               alt={movie.title}
-              className="w-full h-48 object-cover"
+              className="movie-thumbnail"
             />
-            <div className="p-4">
-              <h3 className="font-semibold text-lg truncate">{movie.title}</h3>
-              <p className="text-sm text-gray-500">{movie.release_date}</p>
-              <p className="text-yellow-500 font-semibold">⭐ {movie.average_rating}</p>
+            <div className="movie-info">
+              <h3>{movie.title}</h3>
+              <p>{movie.release_date}</p>
+              <p style={{ color: '#facc15' }}>⭐ {movie.average_rating}</p>
             </div>
           </div>
         ))}
