@@ -14,6 +14,8 @@ class Review(models.Model):
     comment = models.TextField(blank=True)  # 선택적 코멘트
     created_at = models.DateTimeField(auto_now_add=True)  # 생성 일시
     updated_at = models.DateTimeField(auto_now=True)  # 수정 일시
+    like_count = models.PositiveIntegerField(default=0)
+    dislike_count = models.PositiveIntegerField(default=0)
 
     def save(self, *args, **kwargs):
         """
@@ -60,3 +62,15 @@ class ReviewComment(models.Model):
 
     def __str__(self):
         return f"{self.user.username}: {self.content[:20]}"
+    
+class ReviewReaction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    review = models.ForeignKey('Review', on_delete=models.CASCADE, related_name='reactions')
+    is_like = models.BooleanField()  # True = 좋아요, False = 싫어요
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'review')  # 하나의 리뷰에 대해 한 번만 반응 가능
+
+    def __str__(self):
+        return f"{self.user} {'👍' if self.is_like else '👎'} Review {self.review.id}"
