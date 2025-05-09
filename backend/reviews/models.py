@@ -16,6 +16,7 @@ class Review(models.Model):
     updated_at = models.DateTimeField(auto_now=True)  # 수정 일시
     like_count = models.PositiveIntegerField(default=0)
     dislike_count = models.PositiveIntegerField(default=0)
+    is_spoiler = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         """

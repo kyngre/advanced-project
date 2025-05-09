@@ -14,6 +14,11 @@ class ReviewSerializer(serializers.ModelSerializer):
         help_text="평점은 1점에서 5점 사이의 값으로 입력해야 합니다."
     )
 
+    is_spoiler = serializers.BooleanField(
+        default=False,
+        help_text="리뷰에 스포일러가 포함되었는지 여부"
+    )
+
     # 좋아요 개수 계산용 read-only 필드
     like_count = serializers.SerializerMethodField(help_text="이 리뷰에 달린 좋아요 수")
 
@@ -27,7 +32,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        fields = ['id', 'user', 'movie', 'rating', 'comment', 'created_at', 'like_count', 'is_edited']
+        fields = ['id', 'user', 'movie', 'rating', 'comment', 'is_spoiler', 'created_at', 'like_count', 'is_edited']
         read_only_fields = ['user', 'created_at', 'like_count', 'is_edited']
 
 
