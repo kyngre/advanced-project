@@ -118,3 +118,52 @@
   .review-actions button:hover {
     background-color: #e50914;
   }
+
+  .review-comments {
+    margin-top: 10px;
+    background-color: #1c1c1c;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .review-comments .comment {
+    padding: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+  }
+  
+  .review-comments .comment button {
+    background: none;
+    border: none;
+    color: #e50914;
+    cursor: pointer;
+  }
+  
+  .comment-form {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .comment-form textarea {
+    resize: vertical;
+    padding: 6px;
+    background-color: #2a2a2a;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    min-height: 50px;
+  }
+  
+  .comment-form button {
+    align-self: flex-end;
+    background-color: #e50914;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
