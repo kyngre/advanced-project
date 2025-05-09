@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import LoginPage from './pages/LoginPage.jsx';
 import Header from './components/Header.jsx';
-import RegisterPage from './pages/RegisterPage.jsx';
 import AuthPage from './pages/AuthPage.jsx';
 
 function App() {
