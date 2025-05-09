@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import (
+    ReviewHistoryListView,
     ReviewListCreateView,        # 리뷰 목록 조회 + 작성
     ReviewDetailView,            # 리뷰 상세 조회, 수정, 삭제
     ReviewLikeToggleView,        # 리뷰 좋아요 토글
@@ -34,4 +35,6 @@ urlpatterns = [
     path('<int:review_id>/<str:reaction_type>/', ToggleReviewReaction.as_view(), name='toggle-reaction'),
 
     path('comments/<int:comment_id>/like/', ToggleReviewCommentReaction.as_view(), name='comment-like-toggle'),
+
+     path('<int:review_id>/history/', ReviewHistoryListView.as_view(), name='review-history'),
 ]

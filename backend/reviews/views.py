@@ -2,7 +2,7 @@ from rest_framework import status, generics, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from .models import Review, ReviewCommentReaction, ReviewLike, ReviewComment, ReviewReaction
+from .models import Review, ReviewCommentReaction, ReviewHistory, ReviewLike, ReviewComment, ReviewReaction
 from .serializers import ReviewSerializer, ReviewCommentSerializer, ReviewLikeSerializer, ReviewReactionSerializer
 from .permissions import IsOwnerOrReadOnly
 from drf_yasg.utils import swagger_auto_schema
@@ -75,17 +75,24 @@ class ReviewListCreateView(generics.ListCreateAPIView):
 class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]  # 작성자만 수정/삭제 가능
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     @swagger_auto_schema(operation_summary="리뷰 상세 조회")
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
-    @swagger_auto_schema(
-        operation_summary="리뷰 수정",
-        request_body=ReviewSerializer
-    )
+    @swagger_auto_schema(operation_summary="리뷰 수정", request_body=ReviewSerializer)
     def put(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        # 수정 전 내용을 저장
+        ReviewHistory.objects.create(
+            review=instance,
+            user=request.user,
+            previous_rating=instance.rating,
+            previous_comment=instance.comment
+        )
+
         return super().put(request, *args, **kwargs)
 
     @swagger_auto_schema(operation_summary="리뷰 삭제")
@@ -250,3 +257,22 @@ class ToggleReviewCommentReaction(APIView):
             comment.like_count += 1
             comment.save()
             return Response({'liked': True}, status=201)
+        
+from .models import ReviewHistory
+from .serializers import ReviewHistorySerializer
+
+class ReviewHistoryListView(generics.ListAPIView):
+    serializer_class = ReviewHistorySerializer
+    permission_classes = [IsAuthenticated]  # 관리자만 보려면 IsAdminUser 등으로 변경
+
+    @swagger_auto_schema(
+        operation_summary="리뷰 수정 이력 조회",
+        operation_description="리뷰가 수정된 경우, 이전 내용의 이력을 모두 반환합니다.",
+        responses={200: ReviewHistorySerializer(many=True)}
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        review_id = self.kwargs.get('review_id')
+        return ReviewHistory.objects.filter(review_id=review_id).order_by('-edited_at')
