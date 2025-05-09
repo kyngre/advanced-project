@@ -2,12 +2,13 @@ from rest_framework import status, generics, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from .models import Review, ReviewLike, ReviewComment, ReviewReaction
+from .models import Review, ReviewCommentReaction, ReviewLike, ReviewComment, ReviewReaction
 from .serializers import ReviewSerializer, ReviewCommentSerializer, ReviewLikeSerializer, ReviewReactionSerializer
 from .permissions import IsOwnerOrReadOnly
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.filters import OrderingFilter
+
 
 
 # ✅ 리뷰 목록 조회 및 리뷰 작성
@@ -210,3 +211,33 @@ class ToggleReviewReaction(APIView):
                 review.dislike_count += 1
             review.save()
             return Response({"message": "반응이 추가되었습니다."})
+        
+class ToggleReviewCommentReaction(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(
+        operation_summary="리뷰 댓글 좋아요 토글",
+        operation_description="댓글에 좋아요 또는 좋아요 취소를 토글합니다.",
+        responses={
+            200: openapi.Response(description="좋아요 취소됨", examples={"application/json": {"liked": False}}),
+            201: openapi.Response(description="좋아요 등록됨", examples={"application/json": {"liked": True}})
+        }
+    )
+    def post(self, request, comment_id):
+        user = request.user
+        try:
+            comment = ReviewComment.objects.get(id=comment_id)
+        except ReviewComment.DoesNotExist:
+            return Response({"error": "댓글을 찾을 수 없습니다."}, status=404)
+
+        reaction, created = ReviewCommentReaction.objects.get_or_create(user=user, comment=comment)
+
+        if not created:
+            reaction.delete()
+            comment.like_count -= 1
+            comment.save()
+            return Response({'liked': False}, status=200)
+        else:
+            comment.like_count += 1
+            comment.save()
+            return Response({'liked': True}, status=201)
