@@ -161,7 +161,10 @@ const MovieDetailPage = () => {
           <>
             <p><strong>작성자:</strong> {review.user}</p>
             <p><strong>평점:</strong> {review.rating} / 5</p>
-            <p><strong>내용:</strong> {review.comment}</p>
+            <p>
+              <strong>내용:</strong> {review.comment}
+              {review.is_edited && <span className="edited-label"> (수정됨)</span>}
+            </p>
             <button onClick={() => handleLike(review.id)}>👍 {review.like_count}</button>
             {review.is_owner && (
               <div className="review-actions">
@@ -192,7 +195,7 @@ const MovieDetailPage = () => {
         ))}
       </div>
 
-      <h2>📝 리뷰 작성</h2>
+      <h2>리뷰 작성</h2>
       <form onSubmit={handleSubmit} className="review-form">
         <label>
           평점:
@@ -217,7 +220,7 @@ const MovieDetailPage = () => {
         </button>
       </form>
 
-      <h2>🎖️ Top 3 리뷰</h2>
+      <h2>Best 리뷰</h2>
       <div className="reviews">
         {top3Reviews.length === 0 ? (
           <p>아직 추천된 리뷰가 없습니다.</p>
@@ -226,7 +229,7 @@ const MovieDetailPage = () => {
         )}
       </div>
 
-      <h2>📝 다른 리뷰</h2>
+      <h2>다른 리뷰</h2>
       <div className="reviews">
         {otherReviews.length === 0 ? (
           <p>다른 리뷰가 없습니다.</p>
