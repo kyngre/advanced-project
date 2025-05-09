@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Review, ReviewLike, ReviewComment
+from .models import Review, ReviewLike, ReviewComment, ReviewReaction
 
 
 # ✅ 리뷰 Serializer: 영화에 대한 평점 및 코멘트 작성/조회
@@ -43,3 +43,9 @@ class ReviewCommentSerializer(serializers.ModelSerializer):
 
         # 사용자가 직접 입력하지 않도록 처리
         read_only_fields = ['user', 'review', 'created_at']
+
+class ReviewReactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReviewReaction
+        fields = ['id', 'user', 'review', 'is_like', 'created_at']
+        read_only_fields = ['id', 'user', 'created_at']

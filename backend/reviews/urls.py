@@ -4,7 +4,8 @@ from .views import (
     ReviewDetailView,            # 리뷰 상세 조회, 수정, 삭제
     ReviewLikeToggleView,        # 리뷰 좋아요 토글
     ReviewCommentListCreateView, # 리뷰에 대한 댓글 목록 및 작성
-    ReviewCommentDestroyView     # 댓글 삭제
+    ReviewCommentDestroyView,     # 댓글 삭제
+    ToggleReviewReaction
 )
 
 urlpatterns = [
@@ -28,4 +29,6 @@ urlpatterns = [
     # ✅ 특정 댓글 삭제 (작성자 본인만 가능)
     # DELETE /api/reviews/comments/<pk>/
     path('comments/<int:pk>/', ReviewCommentDestroyView.as_view(), name='review-comment-delete'),
+
+     path('<int:review_id>/<str:reaction_type>/', ToggleReviewReaction.as_view(), name='toggle-reaction'),
 ]

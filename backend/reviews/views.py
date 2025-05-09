@@ -2,8 +2,8 @@ from rest_framework import status, generics, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from .models import Review, ReviewLike, ReviewComment
-from .serializers import ReviewSerializer, ReviewCommentSerializer, ReviewLikeSerializer
+from .models import Review, ReviewLike, ReviewComment, ReviewReaction
+from .serializers import ReviewSerializer, ReviewCommentSerializer, ReviewLikeSerializer, ReviewReactionSerializer
 from .permissions import IsOwnerOrReadOnly
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -146,3 +146,50 @@ class ReviewCommentDestroyView(generics.DestroyAPIView):
     @swagger_auto_schema(operation_summary="댓글 삭제")
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
+    
+class ToggleReviewReaction(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, review_id, reaction_type):
+        user = request.user
+        is_like = reaction_type == 'like'
+
+        try:
+            review = Review.objects.get(id=review_id)
+        except Review.DoesNotExist:
+            return Response({"error": "리뷰를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+        reaction, created = ReviewReaction.objects.get_or_create(user=user, review=review)
+        
+        if not created:
+            if reaction.is_like == is_like:
+                # 같은 반응 → 취소
+                reaction.delete()
+                if is_like:
+                    review.like_count -= 1
+                else:
+                    review.dislike_count -= 1
+                review.save()
+                return Response({"message": "반응이 취소되었습니다."})
+            else:
+                # 다른 반응 → 업데이트
+                if is_like:
+                    review.like_count += 1
+                    review.dislike_count -= 1
+                else:
+                    review.dislike_count += 1
+                    review.like_count -= 1
+                reaction.is_like = is_like
+                reaction.save()
+                review.save()
+                return Response({"message": "반응이 변경되었습니다."})
+        else:
+            # 새 반응 추가
+            reaction.is_like = is_like
+            reaction.save()
+            if is_like:
+                review.like_count += 1
+            else:
+                review.dislike_count += 1
+            review.save()
+            return Response({"message": "반응이 추가되었습니다."})
