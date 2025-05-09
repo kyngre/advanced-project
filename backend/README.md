@@ -1,3 +1,37 @@
+# 🛠 Backend - Django
+
+![Django](https://img.shields.io/badge/Django-5.2-green?logo=django)
+![DRF](https://img.shields.io/badge/DRF-3.15.0-blue?logo=django)
+![JWT](https://img.shields.io/badge/Auth-JWT-red)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen)
+
+> Django와 Django REST Framework를 기반으로 사용자 인증, 영화 관리, 리뷰 작성, 게시판 기능 등을 제공하는 백엔드 API입니다.  
+> Swagger를 통해 API 문서화 및 테스트를 지원하며, React 프론트엔드와 연동 가능합니다.
+
+---
+
+## 📑 목차
+
+- [🔧 주요 기능](#-주요-기능)
+  - [✅ 사용자 기능](#-사용자-기능)
+  - [✅ OTT 플랫폼 관리](#-ott-플랫폼-관리)
+  - [✅ 영화 기능](#-영화-기능)
+  - [✅ 검색 및 필터](#-검색-및-필터)
+  - [✅ 리뷰 기능](#-리뷰-기능)
+  - [✅ 게시판 기능](#-게시판-기능)
+  - [✅ API 문서화 (Swagger)](#-api-문서화-swagger)
+- [📦 API 요약](#-api-요약)
+- [⚙️ 시스템 설정 및 성능 최적화](#️-시스템-설정-및-성능-최적화)
+- [🧩 주요 이슈 해결 내역](#-주요-이슈-해결-내역)
+- [🚀 실행 방법](#-실행-방법)
+  - [1. 가상환경 설치 및 패키지 설치](#1-가상환경-설치-및-패키지-설치)
+  - [2. 마이그레이션 및 서버 실행](#2-마이그레이션-및-서버-실행)
+  - [3. Swagger 접속](#3-swagger-접속)
+- [🔐 JWT 인증 사용법 (Swagger에서)](#-jwt-인증-사용법-swagger에서)
+- [🔗 프론트엔드 연동](#-프론트엔드-연동)
+
+---
+
 ## 🔧 주요 기능
 
 ### ✅ 사용자 기능
@@ -46,7 +80,8 @@
 - **게시글 추천/비추천 기능 (좋아요/싫어요)**
 - **주제별 게시판 분리**: 영화 정보, 국내 드라마 등 카테고리 구분
 - **일일/월간 핫글 게시판**: 추천수를 기준으로 인기 게시글을 자동 분류
-- **댓글 정렬**: 추천수 상위 3개 댓글 우선 표시 + 이후 댓글은 작성 순
+- **댓글 정렬 로직직**: 추천수 상위 3개 댓글 우선 표시 + 이후 댓글은 작성 순
+- **댓글 추천 API**: `/api/board/comment-likes/` (POST, is_like 필드 포함)
 
 ### ✅ API 문서화 (Swagger)
 - **drf-yasg를 통한 자동 문서화**
@@ -75,11 +110,17 @@
 | 📝 리뷰 작성   | POST   | `/api/reviews/`                   | 특정 영화에 대한 리뷰 작성                |
 | 📝 리뷰 수정   | PUT    | `/api/reviews/{id}/`              | 리뷰 수정                                 |
 | 📝 리뷰 삭제   | DELETE | `/api/reviews/{id}/`              | 리뷰 삭제                                 |
+| 📝 리뷰 목록   | GET    | `/api/reviews/?movie_id=ID`       | 특정 영화의 리뷰 목록 조회                |
 | ❤️ 리뷰 좋아요 | POST   | `/api/review-likes/`              | 리뷰 좋아요 등록                          |
+| ❤️ 리뷰 좋아요 취소 | DELETE | `/api/review-likes/{id}/`       | 좋아요 취소                              |
 | 💬 리뷰 댓글   | POST   | `/api/review-comments/`           | 리뷰에 댓글 작성                          |
 | 📝 게시글 작성 | POST   | `/api/board/posts/`               | 게시판 글 작성                            |
 | 📝 게시글 목록 | GET    | `/api/board/posts/`               | 게시판 목록 조회                          |
+| 📝 게시글 수정 | PUT    | `/api/board/posts/{id}/`          | 게시글 수정                              |
+| 📝 게시글 삭제 | DELETE | `/api/board/posts/{id}/`          | 게시글 삭제                              |
+| 💬 댓글 삭제   | DELETE | `/api/board/comments/{id}/`       | 게시글 댓글 삭제                         |
 | 💬 게시글 댓글 | POST   | `/api/board/comments/`            | 게시글에 대한 댓글 작성                   |
+| 💬 댓글 삭제   | DELETE | `/api/board/comments/{id}/`       | 게시글 댓글 삭제                         |
 
 ### ⚙️ 시스템 설정 및 성능 최적화
 - **CORS 설정 완료 (React 연동 대비)**
@@ -133,3 +174,9 @@ http://localhost:8000/swagger/
 - **Access Token 발급 후**: `Bearer <your_access_token>`을 사용하여 요청에 인증을 추가합니다.
 
 ---
+
+## 🔗 프론트엔드 연동
+
+- CORS 설정 (`CORS_ALLOW_ALL_ORIGINS = True`)으로 React와 연동 가능
+- 기본 프론트엔드 주소: `http://localhost:3000`
+- JWT 인증 기반으로 React 헤더에 사용자 이메일 표시

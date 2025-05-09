@@ -1,70 +1,122 @@
-# Getting Started with Create React App
+# 🎨 Frontend - React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![React](https://img.shields.io/badge/React-18+-61DAFB?logo=react)
+![JWT](https://img.shields.io/badge/Auth-JWT-red)
+![Style](https://img.shields.io/badge/Style-Netflix--Inspired-black)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 
-## Available Scripts
+> 넷플릭스 스타일 UI를 기반으로 사용자 인증, 영화 리뷰 작성, 게시판 등 기능을 제공하는 React 프론트엔드입니다.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 📑 목차
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- [🎨 프로젝트 소개](#-프로젝트-소개)
+- [🔧 주요 기능](#-주요-기능)
+  - [✅ 사용자 인증 및 상태 관리](#-사용자-인증-및-상태-관리)
+  - [✅ 넷플릭스 스타일 UI](#-넷플릭스-스타일-ui)
+  - [✅ 보호 라우팅](#-보호-라우팅)
+- [💡 기술 스택](#-기술-스택)
+- [📁 디렉터리 구조](#-디렉터리-구조)
+- [🚀 실행 방법](#-실행-방법)
+- [🔐 인증 흐름 요약](#-인증-흐름-요약)
+- [🧩 향후 구현 예정 기능](#-향후-구현-예정-기능)
+- [📄 연동 백엔드](#-연동-백엔드)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 🔧 주요 기능
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### ✅ 사용자 인증 및 상태 관리
+- JWT 기반 로그인 / 회원가입 구현
+- accessToken을 localStorage에 저장하여 로그인 상태 유지
+- 로그인 성공 시 Header에 사용자 이메일 표시
+- 로그아웃 시 상태 초기화 및 토큰 삭제
 
-### `npm run build`
+### ✅ 넷플릭스 스타일 UI
+- 로그인/회원가입을 하나의 화면에서 토글
+- 어두운 배경 + 빨간 버튼 컬러 강조
+- 모바일에서도 잘 작동하는 중앙 정렬 구조
+- `LoginPage`, `RegisterPage`, `AuthPage`로 구성
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### ✅ 보호 라우팅
+- 로그인하지 않은 사용자가 접근 시 `/auth`로 리디렉션
+- `PrivateRoute.jsx`를 통한 경로 보호 구현
+- 예시: `/`, `/reviews`는 로그인한 사용자만 접근 가능
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 💡 기술 스택
 
-### `npm run eject`
+| 항목          | 내용                              |
+|---------------|-----------------------------------|
+| 프레임워크     | React 18+                         |
+| 라우팅         | react-router-dom v6               |
+| HTTP 통신     | axios                             |
+| 인증 관리     | JWT + jwt-decode                  |
+| 상태 관리     | useState, useEffect               |
+| UI 디자인     | Custom CSS (Netflix-Inspired)     |
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 📁 디렉터리 구조
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+frontend/
+├── public/
+│ └── index.html
+├── src/
+│ ├── api/ # axios 인스턴스
+│ │ └── axios.js
+│ ├── components/ # Header 컴포넌트 등
+│ │ └── Header.jsx
+│ ├── pages/ # 페이지 구성
+│ │ ├── AuthPage.jsx
+│ │ ├── LoginPage.jsx
+│ │ ├── RegisterPage.jsx
+│ │ └── MovieDetailPage.jsx (예정)
+│ ├── routes/ # 보호 라우트
+│ │ └── PrivateRoute.jsx
+│ ├── App.jsx # 전체 라우터 및 상태 관리
+│ └── index.js # 앱 진입점
+└── package.json # 종속성 관리
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## 🚀 실행 방법
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+cd frontend
+npm install
+npm start
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+> 기본적으로 `http://localhost:3000`에서 앱이 실행됩니다.  
+> `.env` 파일에서 API URL을 지정하지 않은 경우, `axios` 기본 경로는 `/api`로 설정되어 있어 `proxy` 설정을 통해 Django 백엔드와 연결됩니다.
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🔐 인증 흐름 요약
 
-### Analyzing the Bundle Size
+1. `/auth`에서 로그인 또는 회원가입
+2. 로그인 성공 시 JWT accessToken을 localStorage에 저장
+3. Header에서 이메일 표시 및 보호 페이지 접근 허용
+4. 로그아웃 시 토큰 제거 및 상태 초기화
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+## 🧩 향후 구현 예정 기능
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- 영화 상세 페이지 및 리뷰 목록/작성 기능
+- 리뷰 수정/삭제 및 좋아요 기능
+- 게시판 글쓰기 및 댓글 기능
+- JWT refresh token 처리 (자동 갱신)
+- 반응형 UI 개선 및 페이지 애니메이션 추가
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 📄 연동 백엔드
 
-### Deployment
+- [🛠 Django REST API 문서 보기](../backend/README.md)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
