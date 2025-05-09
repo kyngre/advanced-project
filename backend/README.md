@@ -93,3 +93,41 @@
 - **Swagger에서 영화 등록/검색/리뷰 작성 API 테스트 완료**
 
 ---
+
+## 🚀 실행 방법
+
+### 1. 가상환경 설치 및 패키지 설치
+
+```bash
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+### 2. 마이그레이션 및 서버 실행
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+```
+
+### 3. Swagger 접속
+
+```
+http://localhost:8000/swagger/
+```
+
+---
+
+## 🔐 JWT 인증 사용법 (Swagger에서)
+
+1. `/api/token/`에서 access, refresh 토큰 발급
+2. Swagger 우측 상단 **Authorize** 클릭
+3. `Bearer <access_token>` 형식으로 입력 후 인증
+4. 인증 후 Swagger에서 각 API를 테스트할 수 있습니다.
+
+**예시**:
+- **Access Token 발급 후**: `Bearer <your_access_token>`을 사용하여 요청에 인증을 추가합니다.
+
+---
