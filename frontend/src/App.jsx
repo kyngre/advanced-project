@@ -4,6 +4,7 @@ import { jwtDecode } from 'jwt-decode';
 import Header from './components/Header.jsx';
 import AuthPage from './pages/AuthPage.jsx';
 import PrivateRoute from './routes/PrivateRoute.jsx';
+import MoviesPage from './pages/MoviesPage.jsx'; // 영화 목록 페이지
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -43,19 +44,10 @@ function App() {
       />
 
       <Routes>
-        <Route path="/auth" element={<AuthPage onLoginSuccess={initializeAuth} />} />
+        {/* ✅ 공개 홈 화면 → 영화 목록 */}
+        <Route path="/" element={<MoviesPage />} />
 
-        <Route
-          path="/"
-          element={
-            <PrivateRoute isLoggedIn={isLoggedIn}>
-              <div style={{ padding: '2rem', color: 'white' }}>
-                🎬 홈입니다 (로그인한 사용자만 볼 수 있습니다)
-              </div>
-            </PrivateRoute>
-          }
-        />
-
+        {/* ✅ 리뷰 페이지는 로그인한 사용자만 접근 가능 */}
         <Route
           path="/reviews"
           element={
@@ -66,6 +58,9 @@ function App() {
             </PrivateRoute>
           }
         />
+
+        {/* ✅ 로그인 / 회원가입 */}
+        <Route path="/auth" element={<AuthPage onLoginSuccess={initializeAuth} />} />
       </Routes>
     </Router>
   );
