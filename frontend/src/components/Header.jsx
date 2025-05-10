@@ -1,28 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from '../api/axios';
 import './Header.css';
 
-function Header({ isLoggedIn, onLogout }) {
+function Header({ isLoggedIn, username, onLogout }) {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await axios.get('/users/profile/');
-        setUsername(res.data.username);
-      } catch (err) {
-        console.error('프로필 정보를 불러오지 못했습니다:', err);
-      }
-    };
-
-    if (isLoggedIn) {
-      fetchProfile();
-    } else {
-      setUsername('');
-    }
-  }, [isLoggedIn]);
 
   return (
     <header className="header">
@@ -37,7 +18,7 @@ function Header({ isLoggedIn, onLogout }) {
       <div className="header-right">
         {isLoggedIn ? (
           <>
-            <span className="welcome">👤 {username ? `${username}님` : '사용자님'}</span>
+            <span className="welcome">👤 {username}님</span>
             <button className="btn" onClick={() => navigate('/profile')}>
               회원정보
             </button>
