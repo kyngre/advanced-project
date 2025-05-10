@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import axios from '../api/axios';
 import { useParams } from 'react-router-dom';
 import './MovieDetailPage.css';
+import { ClipLoader } from 'react-spinners';
 
 const MovieDetailPage = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editReviewId, setEditReviewId] = useState(null);
@@ -19,10 +21,13 @@ const MovieDetailPage = () => {
       setMovie(response.data);
     } catch (error) {
       console.error('영화 정보를 불러오지 못했습니다:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchMovieDetail();
   }, [id]);
 
@@ -130,7 +135,24 @@ const MovieDetailPage = () => {
     }
   };
 
-  if (!movie) return <div>로딩 중...</div>;
+  if (loading) {
+    return (
+      <div style={{
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#141414',
+        flexDirection: 'column',
+        color: 'white',
+      }}>
+        <ClipLoader size={60} color="#e50914" />
+        <p style={{ marginTop: '1rem', fontSize: '1.1rem' }}>영화 정보를 불러오는 중입니다...</p>
+      </div>
+    );
+  }
+
+  if (!movie) return <p style={{ color: 'white' }}>영화 정보를 찾을 수 없습니다.</p>;
 
   const top3Reviews = [...(movie.reviews || [])]
     .sort((a, b) => b.like_count - a.like_count)
@@ -188,7 +210,6 @@ const MovieDetailPage = () => {
                 <button onClick={() => handleDelete(review.id)}>🗑 삭제</button>
               </div>
             )}
-            {/* 댓글 목록 */}
             <div className="review-comments">
               <h4>💬 댓글</h4>
               {review.comments?.map((comment) => (
