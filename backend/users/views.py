@@ -111,4 +111,4 @@ def update_profile(request):
     if username:
         user.username = username
         user.save()
-    return Response({"message": "프로필이 수정되었습니다."})
+    return Response({'message': '프로필이 수정되었습니다.'})

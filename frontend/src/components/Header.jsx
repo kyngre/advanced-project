@@ -38,7 +38,8 @@ function Header({ isLoggedIn, onLogout }) {
       <div className="header-right">
         {isLoggedIn ? (
           <>
-            <span className="welcome">👤 {username ? `${username}님` : '사용자님'}</span>
+            <span className="welcome">{username ? `${username}님` : '사용자님'}</span>
+            <Link to="/profile" className="btn">회원정보</Link>
             <button className="btn" onClick={onLogout}>로그아웃</button>
           </>
         ) : (

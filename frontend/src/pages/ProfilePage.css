@@ -1,0 +1,60 @@
+.profile-page {
+  padding: 2rem;
+  color: white;
+  background-color: #141414;
+  min-height: 100vh;
+}
+
+.profile-page label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+.profile-page input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: none;
+  margin-top: 0.25rem;
+  width: 100%;
+}
+
+.ott-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.ott-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #222;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+
+.ott-item img {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+}
+
+.save-btn {
+  margin-top: 1.5rem;
+  background-color: #e50914;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.save-message {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: #ccc;
+}
