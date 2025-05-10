@@ -7,6 +7,7 @@ import PrivateRoute from './routes/PrivateRoute.jsx';
 import MoviesPage from './pages/MoviesPage.jsx'; // 영화 목록 페이지
 import MovieDetailPage from './pages/MovieDetailPage.jsx';
 import SubscribePage from './pages/SubscribePage';
+import ProfilePage from './pages/ProfilePage.jsx';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -65,6 +66,7 @@ function App() {
         <Route path="/auth" element={<AuthPage onLoginSuccess={initializeAuth} />} />
         <Route path="/movies/:id" element={<MovieDetailPage />} />
         <Route path="/subscribe" element={<SubscribePage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </Router>
   );
