@@ -3,32 +3,41 @@ import axios from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 import './SubscribePage.css';
 
+/**
+ * SubscribePage: 회원가입 후 구독 OTT 선택 페이지
+ * - 사용자는 구독 중인 OTT를 선택할 수 있음
+ * - 저장 후 메인 페이지로 이동
+ */
 const SubscribePage = () => {
   const [ottList, setOttList] = useState([]);
   const [selectedOtts, setSelectedOtts] = useState([]);
   const navigate = useNavigate();
 
+  // 🔄 OTT 목록 불러오기
   useEffect(() => {
     axios.get('/ott/')
       .then(res => setOttList(res.data))
       .catch(err => console.error('OTT 목록 불러오기 실패:', err));
   }, []);
 
+  // ✅ 선택된 OTT 토글 (체크박스)
   const toggleOtt = (id) => {
     setSelectedOtts(prev =>
       prev.includes(id) ? prev.filter(ottId => ottId !== id) : [...prev, id]
     );
   };
 
+  // 💾 저장 요청 → 메인페이지 이동
   const handleSubmit = async () => {
     try {
       await axios.post('/users/subscribe/', { ott_ids: selectedOtts });
-      navigate('/');  // 완료 후 메인 페이지로
+      navigate('/');
     } catch (err) {
       alert('구독 설정에 실패했습니다.');
     }
   };
 
+  // 🧾 렌더링
   return (
     <div className="subscribe-page">
       <h2>🎬 구독 중인 OTT를 선택해주세요</h2>
