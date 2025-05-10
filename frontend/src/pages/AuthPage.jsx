@@ -39,12 +39,11 @@ function AuthPage({ onLoginSuccess }) {
         await axios.post('/users/register/', { email, username, password });
         const res = await axios.post('/token/', { email, password });
         localStorage.setItem('accessToken', res.data.access);
-        localStorage.setItem('refreshToken', res.data.refresh); // ✅ 추가됨
+        localStorage.setItem('refreshToken', res.data.refresh);
         onLoginSuccess?.();
-        navigate('/');
+        navigate('/subscribe'); // ✅ 회원가입 후 구독 설정 페이지로 이동
       }
 
-      // ✅ 입력 초기화
       setEmail('');
       setUsername('');
       setPassword('');
@@ -64,7 +63,6 @@ function AuthPage({ onLoginSuccess }) {
 
   return (
     <div className="auth-container">
-      {/* ✅ 전체 화면 로딩 오버레이 */}
       {loading && (
         <div className="fullscreen-loading">
           <ClipLoader color="#e50914" size={60} />
@@ -72,7 +70,6 @@ function AuthPage({ onLoginSuccess }) {
         </div>
       )}
 
-      {/* ✅ 로그인/회원가입 폼 */}
       <form className="auth-box" onSubmit={handleSubmit}>
         <h2>{mode === 'login' ? '로그인' : '회원가입'}</h2>
 
