@@ -7,37 +7,39 @@ function AuthPage({ onLoginSuccess }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ✅ location.state를 기반으로 초기 mode 설정
   const [mode, setMode] = useState(location.state?.mode === 'register' ? 'register' : 'login');
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  // ✅ location 변경될 때마다 mode 재설정
   useEffect(() => {
     const nextMode = location.state?.mode;
     if (nextMode === 'register' || nextMode === 'login') {
       setMode(nextMode);
+      setErrorMessage(''); // 모드 바뀔 때 에러 초기화
     }
-  }, [location.key]); // location.key를 watch해야 페이지 전환 인식됨
+  }, [location.key]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage(''); // 제출 시 에러 초기화
+
     try {
       if (mode === 'login') {
         const res = await axios.post('/token/', { email, password });
         localStorage.setItem('accessToken', res.data.access);
         onLoginSuccess?.();
-        alert('로그인 성공!');
         navigate('/');
       } else {
         await axios.post('/users/register/', { email, username, password });
-        alert('회원가입 성공! 로그인하세요.');
-        setMode('login');
-        setPassword('');
+        const res = await axios.post('/token/', { email, password });
+        localStorage.setItem('accessToken', res.data.access);
+        onLoginSuccess?.();
+        navigate('/');
       }
     } catch (err) {
-      alert(`${mode === 'login' ? '로그인' : '회원가입'} 실패`);
+      setErrorMessage(mode === 'login' ? '로그인에 실패하였습니다.' : '회원가입에 실패하였습니다.');
     }
   };
 
@@ -74,14 +76,23 @@ function AuthPage({ onLoginSuccess }) {
 
         <button type="submit">{mode === 'login' ? '로그인' : '가입하기'}</button>
 
+        {/* ✅ 실패 메시지 표시 */}
+        {errorMessage && (
+          <p className="error-message" style={{ color: 'red', marginTop: '0.5rem' }}>
+            {errorMessage}
+          </p>
+        )}
+
         <p className="toggle-text">
           {mode === 'login' ? '아직 회원이 아니신가요?' : '이미 계정이 있으신가요?'}{' '}
           <span
             onClick={() => {
               const nextMode = mode === 'login' ? 'register' : 'login';
               setMode(nextMode);
+              setErrorMessage(''); // 에러 초기화
               navigate('/auth', { state: { mode: nextMode } });
             }}
+            style={{ cursor: 'pointer', textDecoration: 'underline' }}
           >
             {mode === 'login' ? '회원가입' : '로그인'}
           </span>
