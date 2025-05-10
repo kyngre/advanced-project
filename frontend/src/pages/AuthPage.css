@@ -1,0 +1,97 @@
+/* 🔒 전체 로그인/회원가입 페이지 컨테이너 */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #141414; /* 넷플릭스 다크 배경 */
+}
+
+/* 🔳 로그인/회원가입 박스 스타일 */
+.auth-box {
+  background-color: rgba(0, 0, 0, 0.75);
+  padding: 3rem;
+  border-radius: 8px;
+  width: 320px;
+  text-align: center;
+}
+
+/* 🔤 제목 스타일 (로그인 / 회원가입) */
+.auth-box h2 {
+  color: white;
+  margin-bottom: 2rem;
+}
+
+/* 🧾 입력 필드 스타일 */
+.auth-box input {
+  width: 100%;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  background: #333;
+  border: none;
+  color: white;
+  font-size: 1rem;
+}
+
+/* 🔘 로그인 / 회원가입 버튼 */
+.auth-box button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #e50914; /* 넷플릭스 레드 */
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  border: none;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+/* 🔁 로그인/회원가입 모드 전환 텍스트 */
+.toggle-text {
+  margin-top: 1rem;
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+.toggle-text span {
+  color: #e50914;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* ❗ 에러 메시지 출력 */
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* 🔄 전체화면 로딩 스피너 (로그인/회원가입 처리 중) */
+.fullscreen-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loading-text {
+  margin-top: 1.5rem;
+  color: #e50914;
+  font-size: 1.2rem;
+  font-weight: bold;
+  animation: blink 1.2s infinite;
+}
+
+/* ✨ 로딩 텍스트 깜빡임 효과 */
+@keyframes blink {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.4; }
+  100% { opacity: 1; }
+}

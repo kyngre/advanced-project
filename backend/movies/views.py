@@ -17,8 +17,10 @@ class MovieListView(generics.ListAPIView):
     serializer_class = MovieSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['average_rating', 'release_date', 'title']
-    ordering = ['-average_rating']
+
+    # ✅ 수정: 존재하는 필드 이름으로 교체
+    ordering_fields = ['average_rating_cache', 'release_date', 'title']
+    ordering = ['-average_rating_cache']
 
     @swagger_auto_schema(
         operation_summary="영화 목록 조회",
@@ -27,7 +29,7 @@ class MovieListView(generics.ListAPIView):
             openapi.Parameter(
                 'ordering',
                 openapi.IN_QUERY,
-                description="정렬 기준 (`average_rating`, `release_date`, `title`)",
+                description="정렬 기준 (`average_rating_cache`, `release_date`, `title`)",
                 type=openapi.TYPE_STRING
             )
         ],

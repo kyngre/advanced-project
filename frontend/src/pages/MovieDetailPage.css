@@ -1,0 +1,177 @@
+/* 🎬 영화 상세 페이지 전체 레이아웃 */
+.movie-detail-container {
+  padding: 20px;
+  background-color: #141414;
+  color: white;
+  min-height: 100vh;
+}
+
+.movie-detail-container img {
+  max-width: 100%;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+/* 📺 OTT 로고 표시 */
+.ott-logos {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.ott-logo {
+  width: 50px;
+  height: auto;
+}
+
+/* 📝 리뷰 작성 폼 */
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.review-form label {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  font-size: 0.9rem;
+}
+
+.review-form textarea {
+  resize: vertical;
+  min-height: 60px;
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  background-color: #333;
+  color: white;
+}
+
+.review-form select {
+  padding: 6px;
+  border-radius: 6px;
+  background-color: #333;
+  color: white;
+  border: none;
+}
+
+.review-form button {
+  background-color: #e50914;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.review-form button:disabled {
+  background-color: gray;
+}
+
+/* 🧾 리뷰 목록 */
+.reviews {
+  margin-top: 20px;
+}
+
+.review-card {
+  background-color: #222;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  color: white;
+}
+
+.review-card button {
+  margin-top: 10px;
+  background-color: #444;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.review-card button:hover {
+  background-color: #e50914;
+}
+
+/* 🌟 추천 Top 3 리뷰 강조 */
+.top-review {
+  border: 2px solid gold;
+  background-color: #333;
+}
+
+/* ✏️ 수정 / 삭제 버튼 묶음 */
+.review-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.review-actions button {
+  background-color: #555;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.review-actions button:hover {
+  background-color: #e50914;
+}
+
+/* 💬 리뷰 댓글 섹션 */
+.review-comments {
+  margin-top: 10px;
+  background-color: #1c1c1c;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.review-comments .comment {
+  padding: 5px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.review-comments .comment button {
+  background: none;
+  border: none;
+  color: #e50914;
+  cursor: pointer;
+}
+
+/* 🖊️ 댓글 작성 폼 */
+.comment-form {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.comment-form textarea {
+  resize: vertical;
+  padding: 6px;
+  background-color: #2a2a2a;
+  color: white;
+  border-radius: 6px;
+  border: none;
+  min-height: 50px;
+}
+
+.comment-form button {
+  align-self: flex-end;
+  background-color: #e50914;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}

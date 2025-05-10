@@ -2,89 +2,101 @@ from rest_framework import status, generics, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from .models import Review, ReviewLike, ReviewComment
-from .serializers import ReviewSerializer, ReviewCommentSerializer, ReviewLikeSerializer
-from .permissions import IsOwnerOrReadOnly
+from rest_framework.filters import OrderingFilter
+from django.db.models import Count
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
+from .models import (
+    Review, ReviewCommentReaction, ReviewHistory, ReviewLike, 
+    ReviewComment, ReviewReaction
+)
+from .serializers import (
+    ReviewImageSerializer, ReviewSerializer, ReviewCommentSerializer, 
+    ReviewLikeSerializer, ReviewReactionSerializer, ReviewHistorySerializer
+)
+from .permissions import IsOwnerOrReadOnly
 
-# ✅ 리뷰 목록 조회 및 리뷰 작성
+# ---------------------------------------------------------------------
+# ✅ 리뷰 목록 조회 및 작성
+# ---------------------------------------------------------------------
 class ReviewListCreateView(generics.ListCreateAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]  # 인증된 사용자만 작성 가능, 나머지는 읽기만 가능
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [OrderingFilter]
+    ordering_fields = ['created_at', 'rating', 'like_count']
+    ordering = ['-created_at']
 
-    # Swagger 문서: 리뷰 목록 조회
     @swagger_auto_schema(
         operation_summary="리뷰 목록 조회",
-        operation_description="영화 ID (movie)를 기준으로 리뷰를 필터링할 수 있습니다. 예: `/api/reviews/?movie=1`",
+        operation_description=(
+            "영화 ID(movie)를 기준으로 필터링 가능하며, `ordering` 파라미터로 정렬 지원.\n"
+            "- `-created_at`: 최신순\n- `-like_count`: 추천순\n- `rating`: 낮은 평점순"
+        ),
         manual_parameters=[
-            openapi.Parameter(
-                'movie',
-                openapi.IN_QUERY,
-                description="필터링할 영화의 ID",
-                type=openapi.TYPE_INTEGER
-            )
+            openapi.Parameter('movie', openapi.IN_QUERY, description="영화 ID", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('ordering', openapi.IN_QUERY, description="정렬 기준", type=openapi.TYPE_STRING),
         ],
         responses={200: ReviewSerializer(many=True)}
     )
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
-    # Swagger 문서: 리뷰 작성
     @swagger_auto_schema(
         operation_summary="리뷰 작성",
-        operation_description="특정 영화에 대해 평점과 코멘트를 작성합니다. 평점은 1~5 사이여야 합니다.",
+        operation_description="특정 영화에 대해 평점과 코멘트를 작성합니다.",
         request_body=ReviewSerializer,
         responses={201: ReviewSerializer}
     )
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
-    # 쿼리 파라미터로 전달된 movie ID에 따라 필터링된 리뷰 목록 반환
     def get_queryset(self):
         movie_id = self.request.query_params.get('movie')
-        if movie_id:
-            return Review.objects.filter(movie_id=movie_id)
-        return Review.objects.all()
+        return Review.objects.filter(movie_id=movie_id) if movie_id else Review.objects.all()
 
-    # 리뷰 작성 시 작성자를 현재 로그인한 사용자로 설정
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-
-# ✅ 개별 리뷰 조회 / 수정 / 삭제
+# ---------------------------------------------------------------------
+# ✅ 리뷰 상세 조회 / 수정 / 삭제 및 수정 이력 저장
+# ---------------------------------------------------------------------
 class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]  # 작성자만 수정/삭제 가능
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     @swagger_auto_schema(operation_summary="리뷰 상세 조회")
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
-    @swagger_auto_schema(
-        operation_summary="리뷰 수정",
-        request_body=ReviewSerializer
-    )
+    @swagger_auto_schema(operation_summary="리뷰 수정", request_body=ReviewSerializer)
     def put(self, request, *args, **kwargs):
+        instance = self.get_object()
+        ReviewHistory.objects.create(
+            review=instance,
+            user=request.user,
+            previous_rating=instance.rating,
+            previous_comment=instance.comment
+        )
         return super().put(request, *args, **kwargs)
 
     @swagger_auto_schema(operation_summary="리뷰 삭제")
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
 
-
-# ✅ 리뷰 좋아요 기능 (토글 방식)
+# ---------------------------------------------------------------------
+# ✅ 리뷰 좋아요 토글 (ReviewLike)
+# ---------------------------------------------------------------------
 class ReviewLikeToggleView(APIView):
-    permission_classes = [IsAuthenticated]  # 인증된 사용자만 가능
+    permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
         operation_summary="리뷰 좋아요 토글",
-        operation_description="리뷰에 좋아요 또는 좋아요 취소를 토글합니다.",
+        operation_description="리뷰에 대해 좋아요를 토글합니다.",
         responses={
-            200: openapi.Response(description="좋아요 취소됨", examples={"application/json": {"liked": False}}),
-            201: openapi.Response(description="좋아요 등록됨", examples={"application/json": {"liked": True}})
+            200: openapi.Response(description="좋아요 취소됨"),
+            201: openapi.Response(description="좋아요 등록됨")
         }
     )
     def post(self, request, pk):
@@ -93,51 +105,93 @@ class ReviewLikeToggleView(APIView):
         except Review.DoesNotExist:
             return Response({'detail': '리뷰를 찾을 수 없습니다.'}, status=404)
 
-        # 이미 좋아요한 경우 → 삭제(좋아요 취소), 그렇지 않으면 등록
         like, created = ReviewLike.objects.get_or_create(user=request.user, review=review)
-
         if not created:
             like.delete()
             return Response({'liked': False}, status=200)
+        return Response({'liked': True}, status=201)
+
+# ---------------------------------------------------------------------
+# ✅ 리뷰 추천/비추천 기능 (ReviewReaction)
+# ---------------------------------------------------------------------
+class ToggleReviewReaction(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, review_id, reaction_type):
+        user = request.user
+        is_like = reaction_type == 'like'
+
+        try:
+            review = Review.objects.get(id=review_id)
+        except Review.DoesNotExist:
+            return Response({"error": "리뷰를 찾을 수 없습니다."}, status=404)
+
+        reaction, created = ReviewReaction.objects.get_or_create(user=user, review=review)
+
+        if not created and reaction.is_like == is_like:
+            reaction.delete()
+            if is_like:
+                review.like_count -= 1
+            else:
+                review.dislike_count -= 1
+            review.save()
+            return Response({"message": "반응이 취소되었습니다."})
+
+        if not created:
+            if is_like:
+                review.like_count += 1
+                review.dislike_count -= 1
+            else:
+                review.dislike_count += 1
+                review.like_count -= 1
+            reaction.is_like = is_like
+            reaction.save()
         else:
-            return Response({'liked': True}, status=201)
+            reaction.is_like = is_like
+            reaction.save()
+            if is_like:
+                review.like_count += 1
+            else:
+                review.dislike_count += 1
+        review.save()
+        return Response({"message": "반응이 처리되었습니다."})
 
-
-# ✅ 댓글 목록 조회 + 댓글 작성
+# ---------------------------------------------------------------------
+# ✅ 리뷰 댓글 목록 조회 + 작성 (상위 3개 추천순 정렬 포함)
+# ---------------------------------------------------------------------
 class ReviewCommentListCreateView(generics.ListCreateAPIView):
     serializer_class = ReviewCommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    # 특정 리뷰의 댓글만 조회
-    def get_queryset(self):
-        review_id = self.kwargs.get('review_id')
-        return ReviewComment.objects.filter(review_id=review_id)
-
     @swagger_auto_schema(
         operation_summary="댓글 목록 조회",
-        operation_description="특정 리뷰의 댓글 목록을 조회합니다.",
+        operation_description="상위 3개는 추천순, 나머지는 작성순으로 정렬됩니다.",
         responses={200: ReviewCommentSerializer(many=True)}
     )
     def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+        review_id = self.kwargs.get('review_id')
+        comments = ReviewComment.objects.filter(review_id=review_id)
+        top_comments = comments.order_by('-like_count', '-created_at')[:3]
+        remaining_comments = comments.exclude(id__in=top_comments).order_by('created_at')
+        result = list(top_comments) + list(remaining_comments)
+        serializer = self.get_serializer(result, many=True)
+        return Response(serializer.data)
 
     @swagger_auto_schema(
         operation_summary="댓글 작성",
-        operation_description="리뷰에 댓글을 작성합니다. content 필드만 입력하세요.",
         request_body=ReviewCommentSerializer,
         responses={201: ReviewCommentSerializer}
     )
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
-    # 댓글 저장 시 현재 로그인한 사용자 + 해당 리뷰를 명시적으로 저장
     def perform_create(self, serializer):
-        review_id = self.kwargs.get('review_id')
-        review = Review.objects.get(pk=review_id)
+        review = Review.objects.get(pk=self.kwargs.get('review_id'))
         serializer.save(user=self.request.user, review=review)
 
-
-# ✅ 댓글 삭제 (작성자만 가능)
+# ---------------------------------------------------------------------
+# ✅ 댓글 삭제
+# ---------------------------------------------------------------------
 class ReviewCommentDestroyView(generics.DestroyAPIView):
     queryset = ReviewComment.objects.all()
     serializer_class = ReviewCommentSerializer
@@ -146,3 +200,61 @@ class ReviewCommentDestroyView(generics.DestroyAPIView):
     @swagger_auto_schema(operation_summary="댓글 삭제")
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
+
+# ---------------------------------------------------------------------
+# ✅ 댓글 좋아요 기능 (ReviewCommentReaction)
+# ---------------------------------------------------------------------
+class ToggleReviewCommentReaction(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(
+        operation_summary="리뷰 댓글 좋아요 토글",
+        responses={
+            200: openapi.Response(description="좋아요 취소됨"),
+            201: openapi.Response(description="좋아요 등록됨")
+        }
+    )
+    def post(self, request, comment_id):
+        user = request.user
+        try:
+            comment = ReviewComment.objects.get(id=comment_id)
+        except ReviewComment.DoesNotExist:
+            return Response({"error": "댓글을 찾을 수 없습니다."}, status=404)
+
+        reaction, created = ReviewCommentReaction.objects.get_or_create(user=user, comment=comment)
+        if not created:
+            reaction.delete()
+            comment.like_count -= 1
+            comment.save()
+            return Response({'liked': False}, status=200)
+        comment.like_count += 1
+        comment.save()
+        return Response({'liked': True}, status=201)
+
+# ---------------------------------------------------------------------
+# ✅ 리뷰 수정 이력 조회 API
+# ---------------------------------------------------------------------
+class ReviewHistoryListView(generics.ListAPIView):
+    serializer_class = ReviewHistorySerializer
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(
+        operation_summary="리뷰 수정 이력 조회",
+        responses={200: ReviewHistorySerializer(many=True)}
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return ReviewHistory.objects.filter(review_id=self.kwargs.get('review_id')).order_by('-edited_at')
+
+# ---------------------------------------------------------------------
+# ✅ 리뷰 이미지 업로드 API
+# ---------------------------------------------------------------------
+class ReviewImageUploadView(generics.CreateAPIView):
+    serializer_class = ReviewImageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        review = Review.objects.get(pk=self.kwargs.get('review_id'))
+        serializer.save(review=review)

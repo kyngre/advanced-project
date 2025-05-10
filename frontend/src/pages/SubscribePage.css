@@ -1,0 +1,44 @@
+/* 📄 구독 설정 페이지 전체 레이아웃 */
+.subscribe-page {
+  padding: 2rem;
+  color: white;
+  background-color: #141414;
+  min-height: 100vh;
+}
+
+/* 📺 OTT 목록 그리드 (가로 정렬 + 줄바꿈) */
+.ott-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+/* 🧩 개별 OTT 항목 카드 */
+.ott-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #222;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* 🖼️ OTT 로고 이미지 */
+.ott-item img {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+}
+
+/* 💾 저장 버튼 */
+.save-btn {
+  background-color: #e50914;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
