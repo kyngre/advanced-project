@@ -45,7 +45,7 @@ function App() {
 
   return (
     <Router>
-      {authReady && username !== null && (
+      {authReady && (
         <Header
           isLoggedIn={isLoggedIn}
           userEmail={userEmail}
@@ -75,7 +75,7 @@ function App() {
         </div>
       ) : (
         <Routes>
-          <Route path="/" element={<MoviesPage isLoggedIn={isLoggedIn} />} /> {/* ✅ 수정 */}
+          <Route path="/" element={<MoviesPage isLoggedIn={isLoggedIn} />} />
           <Route
             path="/reviews"
             element={
