@@ -66,7 +66,14 @@ function App() {
         <Route path="/auth" element={<AuthPage onLoginSuccess={initializeAuth} />} />
         <Route path="/movies/:id" element={<MovieDetailPage />} />
         <Route path="/subscribe" element={<SubscribePage />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute isLoggedIn={isLoggedIn}>
+              <ProfilePage />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </Router>
   );
