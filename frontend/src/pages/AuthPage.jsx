@@ -1,14 +1,25 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from '../api/axios';
 import './AuthPage.css';
 
 function AuthPage({ onLoginSuccess }) {
-  const [mode, setMode] = useState('login'); // 'login' 또는 'register'
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // ✅ location.state를 기반으로 초기 mode 설정
+  const [mode, setMode] = useState(location.state?.mode === 'register' ? 'register' : 'login');
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+
+  // ✅ location 변경될 때마다 mode 재설정
+  useEffect(() => {
+    const nextMode = location.state?.mode;
+    if (nextMode === 'register' || nextMode === 'login') {
+      setMode(nextMode);
+    }
+  }, [location.key]); // location.key를 watch해야 페이지 전환 인식됨
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,6 +45,7 @@ function AuthPage({ onLoginSuccess }) {
     <div className="auth-container">
       <form className="auth-box" onSubmit={handleSubmit}>
         <h2>{mode === 'login' ? '로그인' : '회원가입'}</h2>
+
         <input
           type="email"
           placeholder="이메일"
@@ -41,6 +53,7 @@ function AuthPage({ onLoginSuccess }) {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
+
         {mode === 'register' && (
           <input
             type="text"
@@ -50,6 +63,7 @@ function AuthPage({ onLoginSuccess }) {
             required
           />
         )}
+
         <input
           type="password"
           placeholder="비밀번호"
@@ -57,11 +71,18 @@ function AuthPage({ onLoginSuccess }) {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+
         <button type="submit">{mode === 'login' ? '로그인' : '가입하기'}</button>
 
         <p className="toggle-text">
           {mode === 'login' ? '아직 회원이 아니신가요?' : '이미 계정이 있으신가요?'}{' '}
-          <span onClick={() => setMode(mode === 'login' ? 'register' : 'login')}>
+          <span
+            onClick={() => {
+              const nextMode = mode === 'login' ? 'register' : 'login';
+              setMode(nextMode);
+              navigate('/auth', { state: { mode: nextMode } });
+            }}
+          >
             {mode === 'login' ? '회원가입' : '로그인'}
           </span>
         </p>
