@@ -3,13 +3,13 @@ import axios from '../api/axios';
 import './ProfilePage.css';
 import { ClipLoader } from 'react-spinners';
 
-const ProfilePage = () => {
+const ProfilePage = ({ setGlobalUsername }) => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [subscribedOtts, setSubscribedOtts] = useState([]);
   const [ottList, setOttList] = useState([]);
   const [message, setMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(true); // ✅ 로딩 상태
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,7 +23,7 @@ const ProfilePage = () => {
         setEmail(profileRes.data.email);
         setUsername(profileRes.data.username);
         setSubscribedOtts(profileRes.data.subscribed_ott.map(o => o.id));
-        setIsLoading(false); // ✅ 로딩 끝
+        setIsLoading(false);
       } catch (err) {
         console.error('프로필 정보를 불러오지 못했습니다:', err);
         setIsLoading(false);
@@ -42,8 +42,13 @@ const ProfilePage = () => {
   const handleSave = async () => {
     try {
       await axios.put('/users/update/', { username });
-      await axios.post('/users/subscribe/', { ott_ids: subscribedOtts });
+      await axios.post('/users/subscribe/', { ott_ids: [...new Set(subscribedOtts)] });
       setMessage('저장되었습니다!');
+
+      // ✅ App.jsx의 Header 상태도 즉시 반영
+      if (setGlobalUsername) {
+        setGlobalUsername(username);
+      }
     } catch {
       setMessage('저장에 실패했습니다.');
     }

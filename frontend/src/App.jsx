@@ -14,7 +14,7 @@ import axios from './api/axios';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
-  const [username, setUsername] = useState(null); // ✅ 초기 null
+  const [username, setUsername] = useState(null);
   const [authReady, setAuthReady] = useState(false);
 
   const initializeAuth = async () => {
@@ -24,8 +24,6 @@ function App() {
         const decoded = jwtDecode(token);
         setIsLoggedIn(true);
         setUserEmail(decoded.email);
-
-        // ✅ 사용자 프로필 정보에서 username도 가져오기
         const res = await axios.get('/users/profile/');
         setUsername(res.data.username);
       } catch {
@@ -47,7 +45,6 @@ function App() {
 
   return (
     <Router>
-      {/* ✅ 로그인 여부 및 사용자명 준비 완료 후 Header 렌더링 */}
       {authReady && username !== null && (
         <Header
           isLoggedIn={isLoggedIn}
@@ -63,7 +60,6 @@ function App() {
         />
       )}
 
-      {/* ✅ 로그인 판단 전엔 전체 로딩 화면 */}
       {!authReady ? (
         <div style={{
           height: '100vh',
@@ -79,7 +75,7 @@ function App() {
         </div>
       ) : (
         <Routes>
-          <Route path="/" element={<MoviesPage />} />
+          <Route path="/" element={<MoviesPage isLoggedIn={isLoggedIn} />} /> {/* ✅ 수정 */}
           <Route
             path="/reviews"
             element={
@@ -97,7 +93,7 @@ function App() {
             path="/profile"
             element={
               <PrivateRoute isLoggedIn={isLoggedIn}>
-                <ProfilePage />
+                <ProfilePage setGlobalUsername={setUsername} />
               </PrivateRoute>
             }
           />
