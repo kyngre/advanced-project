@@ -1,3 +1,4 @@
+/* 🔒 전체 로그인/회원가입 페이지 컨테이너 */
 .auth-container {
   display: flex;
   justify-content: center;
@@ -6,6 +7,7 @@
   background-color: #141414; /* 넷플릭스 다크 배경 */
 }
 
+/* 🔳 로그인/회원가입 박스 스타일 */
 .auth-box {
   background-color: rgba(0, 0, 0, 0.75);
   padding: 3rem;
@@ -14,11 +16,13 @@
   text-align: center;
 }
 
+/* 🔤 제목 스타일 (로그인 / 회원가입) */
 .auth-box h2 {
   color: white;
   margin-bottom: 2rem;
 }
 
+/* 🧾 입력 필드 스타일 */
 .auth-box input {
   width: 100%;
   padding: 0.75rem;
@@ -29,6 +33,7 @@
   font-size: 1rem;
 }
 
+/* 🔘 로그인 / 회원가입 버튼 */
 .auth-box button {
   width: 100%;
   padding: 0.75rem;
@@ -41,6 +46,7 @@
   cursor: pointer;
 }
 
+/* 🔁 로그인/회원가입 모드 전환 텍스트 */
 .toggle-text {
   margin-top: 1rem;
   color: #ccc;
@@ -53,14 +59,14 @@
   font-weight: bold;
 }
 
-/* 에러 메시지 스타일 */
+/* ❗ 에러 메시지 출력 */
 .error-message {
   color: red;
   font-size: 0.9rem;
   margin-top: 0.5rem;
 }
 
-/* 로그인/회원가입 로딩 상태 */
+/* 🔄 전체화면 로딩 스피너 (로그인/회원가입 처리 중) */
 .fullscreen-loading {
   position: fixed;
   top: 0;
@@ -83,6 +89,7 @@
   animation: blink 1.2s infinite;
 }
 
+/* ✨ 로딩 텍스트 깜빡임 효과 */
 @keyframes blink {
   0%   { opacity: 1; }
   50%  { opacity: 0.4; }
