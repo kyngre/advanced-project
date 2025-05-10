@@ -102,3 +102,13 @@ def subscribe_ott(request):
     user = request.user
     user.subscribed_ott.set(ott_ids)
     return Response({'message': '구독 정보가 갱신되었습니다.'})
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_profile(request):
+    user = request.user
+    username = request.data.get('username')
+    if username:
+        user.username = username
+        user.save()
+    return Response({"message": "프로필이 수정되었습니다."})
