@@ -95,7 +95,14 @@
   .filter-bar input,
   .filter-bar select,
   .filter-bar .search-button {
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 0.9rem;
     width: 100%;
+    /* ✅ 추가: 모든 요소를 동일한 폭으로 */
+    box-sizing: border-box;
+    /* ✅ 추가: padding 포함한 너비 계산 */
   }
 }
 
