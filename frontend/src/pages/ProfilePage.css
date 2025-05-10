@@ -1,3 +1,4 @@
+/* 👤 프로필 페이지 전체 레이아웃 */
 .profile-page {
   background-color: #141414;
   min-height: 100vh;
@@ -7,11 +8,13 @@
   color: white;
 }
 
+/* 📦 프로필 컨테이너 (중앙 정렬된 카드) */
 .profile-container {
   width: 100%;
   max-width: 800px;
 }
 
+/* 🧾 제목 (👤 + 텍스트) */
 .profile-container h2 {
   display: flex;
   align-items: center;
@@ -25,6 +28,7 @@
   font-size: 1.5rem;
 }
 
+/* 🏷️ 입력 필드 라벨 */
 .profile-container label {
   display: block;
   margin-top: 1.5rem;
@@ -33,6 +37,7 @@
   font-size: 1rem;
 }
 
+/* ✏️ 텍스트 입력 필드 */
 .profile-container input {
   padding: 0.6rem;
   font-size: 1rem;
@@ -43,6 +48,7 @@
   color: black;
 }
 
+/* 📺 OTT 구독 리스트 그리드 */
 .ott-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -50,6 +56,7 @@
   margin-top: 1rem;
 }
 
+/* 🎞️ 각 OTT 아이템 카드 */
 .ott-item {
   background-color: #222;
   padding: 0.8rem;
@@ -65,11 +72,13 @@
   background-color: #333;
 }
 
+/* ✅ 체크박스 커스터마이징 */
 .ott-item input {
   transform: scale(1.2);
   accent-color: #e50914;
 }
 
+/* 🖼️ OTT 로고 */
 .ott-item img {
   width: 32px;
   height: 32px;
@@ -77,11 +86,13 @@
   object-fit: cover;
 }
 
+/* 🏷️ OTT 이름 텍스트 */
 .ott-item span {
   font-size: 0.95rem;
   color: white;
 }
 
+/* 💾 저장 버튼 */
 .save-btn {
   margin-top: 2rem;
   background-color: #e50914;
@@ -98,6 +109,7 @@
   background-color: #c40812;
 }
 
+/* ✅ 저장 완료 메시지 */
 .save-message {
   margin-top: 1rem;
   font-size: 0.95rem;
