@@ -10,7 +10,6 @@ const MoviesPage = ({ isLoggedIn }) => {
   const [search, setSearch] = useState('');
   const [ott, setOtt] = useState('');
   const [ordering, setOrdering] = useState('');
-  const [subscribedOnly, setSubscribedOnly] = useState(false); // ✅ 추가
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -25,9 +24,14 @@ const MoviesPage = ({ isLoggedIn }) => {
   useEffect(() => {
     let url = '/movies/search/?';
     if (search) url += `search=${search}&`;
-    if (ott) url += `ott_services=${ott}&`;
+
+    if (ott === 'subscribed') {
+      url += `subscribed_only=true&`; // ✅ 구독 필터
+    } else if (ott) {
+      url += `ott_services=${ott}&`;
+    }
+
     if (ordering) url += `ordering=${ordering}&`;
-    if (subscribedOnly) url += `subscribed_only=true`;
 
     axios.get(url)
       .then(res => {
@@ -38,7 +42,7 @@ const MoviesPage = ({ isLoggedIn }) => {
         console.error('영화 목록 불러오기 실패:', err);
         setError('영화 목록을 불러오는 데 실패했습니다.');
       });
-  }, [search, ott, ordering, subscribedOnly]);
+  }, [search, ott, ordering]);
 
   return (
     <div className="movies-page">
@@ -59,8 +63,10 @@ const MoviesPage = ({ isLoggedIn }) => {
           검색
         </button>
 
+        {/* ✅ OTT 드롭다운 - 구독 옵션 포함 */}
         <select value={ott} onChange={(e) => setOtt(e.target.value)}>
           <option value="">OTT 전체</option>
+          {isLoggedIn && <option value="subscribed">구독 중인 OTT</option>}
           {ottList.map((item) => (
             <option key={item.id} value={item.id}>
               {item.name}
@@ -75,18 +81,6 @@ const MoviesPage = ({ isLoggedIn }) => {
           <option value="average_rating">평점 낮은순</option>
           <option value="title">제목순</option>
         </select>
-
-        {/* ✅ 로그인한 사용자에게만 보이는 필터 */}
-        {isLoggedIn && (
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <input
-              type="checkbox"
-              checked={subscribedOnly}
-              onChange={(e) => setSubscribedOnly(e.target.checked)}
-            />
-            구독 중인 OTT만 보기
-          </label>
-        )}
       </div>
 
       {/* ✅ 에러 메시지 */}
@@ -110,7 +104,6 @@ const MoviesPage = ({ isLoggedIn }) => {
               <p>{movie.release_date}</p>
               <p style={{ color: '#facc15' }}>⭐ {movie.average_rating}</p>
 
-              {/* ✅ OTT 로고 */}
               <div style={{ display: 'flex', gap: '6px', marginTop: '0.5rem' }}>
                 {movie.ott_services?.map((ottId) => {
                   const ott = ottList.find(o => o.id === ottId);
