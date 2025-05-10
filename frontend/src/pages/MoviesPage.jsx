@@ -6,20 +6,21 @@ import { useNavigate } from 'react-router-dom';
 const MoviesPage = () => {
   const [movies, setMovies] = useState([]);
   const [ottList, setOttList] = useState([]);
+  const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [ott, setOtt] = useState('');
   const [ordering, setOrdering] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // ✅ OTT 목록 가져오기
+  // ✅ OTT 목록 불러오기
   useEffect(() => {
     axios.get('/ott/')
       .then(res => setOttList(res.data))
       .catch(err => console.error('OTT 목록 불러오기 실패:', err));
   }, []);
 
-  // ✅ 영화 목록 가져오기 (검색, 필터, 정렬 적용)
+  // ✅ 영화 목록 불러오기
   useEffect(() => {
     let url = '/movies/search/?';
     if (search) url += `search=${search}&`;
@@ -27,7 +28,10 @@ const MoviesPage = () => {
     if (ordering) url += `ordering=${ordering}`;
 
     axios.get(url)
-      .then(res => setMovies(res.data))
+      .then(res => {
+        setMovies(res.data);
+        setError('');
+      })
       .catch(err => {
         console.error('영화 목록 불러오기 실패:', err);
         setError('영화 목록을 불러오는 데 실패했습니다.');
@@ -43,9 +47,15 @@ const MoviesPage = () => {
         <input
           type="text"
           placeholder="영화 제목 검색"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') setSearch(searchInput);
+          }}
         />
+        <button onClick={() => setSearch(searchInput)} className="search-button">
+          검색
+        </button>
 
         <select value={ott} onChange={(e) => setOtt(e.target.value)}>
           <option value="">OTT 전체</option>
@@ -74,7 +84,7 @@ const MoviesPage = () => {
           <div
             key={movie.id}
             className="movie-card"
-            onClick={() => navigate(`/movies/${movie.id}`)} // ✅ 상세 페이지 이동
+            onClick={() => navigate(`/movies/${movie.id}`)}
           >
             <img
               src={movie.thumbnail_url}
@@ -86,7 +96,7 @@ const MoviesPage = () => {
               <p>{movie.release_date}</p>
               <p style={{ color: '#facc15' }}>⭐ {movie.average_rating}</p>
 
-              {/* ✅ OTT 로고 표시 */}
+              {/* ✅ OTT 로고 */}
               <div style={{ display: 'flex', gap: '6px', marginTop: '0.5rem' }}>
                 {movie.ott_services?.map((ottId) => {
                   const ott = ottList.find(o => o.id === ottId);
