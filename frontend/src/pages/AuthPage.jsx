@@ -4,10 +4,17 @@ import axios from '../api/axios';
 import './AuthPage.css';
 import { ClipLoader } from 'react-spinners';
 
+/**
+ * AuthPage: 로그인 / 회원가입 통합 페이지
+ * - mode 상태에 따라 화면 전환
+ * - 로그인 성공 시 메인으로 이동
+ * - 회원가입 성공 시 구독 선택 페이지로 이동
+ */
 function AuthPage({ onLoginSuccess }) {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // 🔧 상태 정의
   const [mode, setMode] = useState(location.state?.mode === 'register' ? 'register' : 'login');
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
@@ -15,6 +22,7 @@ function AuthPage({ onLoginSuccess }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // 🔄 페이지 이동에 따른 모드 갱신
   useEffect(() => {
     const nextMode = location.state?.mode;
     if (nextMode === 'register' || nextMode === 'login') {
@@ -23,6 +31,7 @@ function AuthPage({ onLoginSuccess }) {
     }
   }, [location.key]);
 
+  // 🚀 로그인 또는 회원가입 처리
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage('');
@@ -63,6 +72,7 @@ function AuthPage({ onLoginSuccess }) {
 
   return (
     <div className="auth-container">
+      {/* 🔃 로딩 스피너 */}
       {loading && (
         <div className="fullscreen-loading">
           <ClipLoader color="#e50914" size={60} />
@@ -70,6 +80,7 @@ function AuthPage({ onLoginSuccess }) {
         </div>
       )}
 
+      {/* 🔐 로그인 또는 회원가입 폼 */}
       <form className="auth-box" onSubmit={handleSubmit}>
         <h2>{mode === 'login' ? '로그인' : '회원가입'}</h2>
 
@@ -101,12 +112,12 @@ function AuthPage({ onLoginSuccess }) {
 
         <button type="submit">{mode === 'login' ? '로그인' : '가입하기'}</button>
 
+        {/* ❗ 에러 메시지 */}
         {errorMessage && (
-          <p className="error-message" style={{ color: 'red', marginTop: '0.5rem' }}>
-            {errorMessage}
-          </p>
+          <p className="error-message">{errorMessage}</p>
         )}
 
+        {/* 🔁 로그인 / 회원가입 모드 전환 */}
         <p className="toggle-text">
           {mode === 'login' ? '아직 회원이 아니신가요?' : '이미 계정이 있으신가요?'}{' '}
           <span
@@ -116,7 +127,6 @@ function AuthPage({ onLoginSuccess }) {
               setErrorMessage('');
               navigate('/auth', { state: { mode: nextMode } });
             }}
-            style={{ cursor: 'pointer', textDecoration: 'underline' }}
           >
             {mode === 'login' ? '회원가입' : '로그인'}
           </span>
