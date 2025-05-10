@@ -8,11 +8,12 @@ import MoviesPage from './pages/MoviesPage.jsx';
 import MovieDetailPage from './pages/MovieDetailPage.jsx';
 import SubscribePage from './pages/SubscribePage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
+import { ClipLoader } from 'react-spinners';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
-  const [authReady, setAuthReady] = useState(false); // ✅ 추가
+  const [authReady, setAuthReady] = useState(false);
 
   const initializeAuth = () => {
     const token = localStorage.getItem('accessToken');
@@ -29,7 +30,7 @@ function App() {
       setIsLoggedIn(false);
       setUserEmail('');
     }
-    setAuthReady(true); // ✅ 인증 판단 완료
+    setAuthReady(true);
   };
 
   useEffect(() => {
@@ -38,22 +39,37 @@ function App() {
 
   return (
     <Router>
-      <Header
-        isLoggedIn={isLoggedIn}
-        userEmail={userEmail}
-        onLogout={() => {
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
-          setIsLoggedIn(false);
-          setUserEmail('');
-        }}
-      />
-
-      {/* ✅ 인증 판단이 완료되었을 때만 라우터 렌더링 */}
+      {/* ✅ 로그인 여부 확인 후 Header 렌더링 */}
       {authReady && (
+        <Header
+          isLoggedIn={isLoggedIn}
+          userEmail={userEmail}
+          onLogout={() => {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            setIsLoggedIn(false);
+            setUserEmail('');
+          }}
+        />
+      )}
+
+      {/* ✅ 로그인 여부 확인 전엔 전체 로딩 화면 */}
+      {!authReady ? (
+        <div style={{
+          height: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#141414',
+          flexDirection: 'column',
+          color: 'white',
+        }}>
+          <ClipLoader color="#e50914" size={60} />
+          <p style={{ marginTop: '1rem', fontSize: '1.1rem' }}>잠시만 기다려주세요...</p>
+        </div>
+      ) : (
         <Routes>
           <Route path="/" element={<MoviesPage />} />
-
           <Route
             path="/reviews"
             element={
@@ -64,7 +80,6 @@ function App() {
               </PrivateRoute>
             }
           />
-
           <Route path="/auth" element={<AuthPage onLoginSuccess={initializeAuth} />} />
           <Route path="/movies/:id" element={<MovieDetailPage />} />
           <Route path="/subscribe" element={<SubscribePage />} />
