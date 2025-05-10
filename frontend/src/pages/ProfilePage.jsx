@@ -3,6 +3,10 @@ import axios from '../api/axios';
 import './ProfilePage.css';
 import { ClipLoader } from 'react-spinners';
 
+/**
+ * ProfilePage: 사용자 프로필 및 구독 관리 페이지
+ * - 닉네임 수정 및 구독 중인 OTT 관리
+ */
 const ProfilePage = ({ setGlobalUsername }) => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
@@ -11,6 +15,7 @@ const ProfilePage = ({ setGlobalUsername }) => {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
+  // 🔄 초기 데이터 로딩: OTT 목록 + 사용자 정보
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -33,19 +38,21 @@ const ProfilePage = ({ setGlobalUsername }) => {
     fetchData();
   }, []);
 
+  // ✅ 구독 OTT 토글
   const toggleOtt = (id) => {
     setSubscribedOtts(prev =>
       prev.includes(id) ? prev.filter(o => o !== id) : [...prev, id]
     );
   };
 
+  // 💾 저장 처리
   const handleSave = async () => {
     try {
       await axios.put('/users/update/', { username });
       await axios.post('/users/subscribe/', { ott_ids: [...new Set(subscribedOtts)] });
       setMessage('저장되었습니다!');
 
-      // ✅ App.jsx의 Header 상태도 즉시 반영
+      // 🔄 Header에 닉네임 반영
       if (setGlobalUsername) {
         setGlobalUsername(username);
       }
@@ -54,6 +61,7 @@ const ProfilePage = ({ setGlobalUsername }) => {
     }
   };
 
+  // ⏳ 로딩 중 표시
   if (isLoading) {
     return (
       <div style={{
@@ -71,6 +79,7 @@ const ProfilePage = ({ setGlobalUsername }) => {
     );
   }
 
+  // ✅ 메인 렌더링
   return (
     <div className="profile-page">
       <div className="profile-container">
