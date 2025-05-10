@@ -9,26 +9,34 @@ import MovieDetailPage from './pages/MovieDetailPage.jsx';
 import SubscribePage from './pages/SubscribePage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import { ClipLoader } from 'react-spinners';
+import axios from './api/axios';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
+  const [username, setUsername] = useState(null); // ✅ 초기 null
   const [authReady, setAuthReady] = useState(false);
 
-  const initializeAuth = () => {
+  const initializeAuth = async () => {
     const token = localStorage.getItem('accessToken');
     if (token) {
       try {
         const decoded = jwtDecode(token);
         setIsLoggedIn(true);
         setUserEmail(decoded.email);
+
+        // ✅ 사용자 프로필 정보에서 username도 가져오기
+        const res = await axios.get('/users/profile/');
+        setUsername(res.data.username);
       } catch {
         setIsLoggedIn(false);
         setUserEmail('');
+        setUsername(null);
       }
     } else {
       setIsLoggedIn(false);
       setUserEmail('');
+      setUsername(null);
     }
     setAuthReady(true);
   };
@@ -39,21 +47,23 @@ function App() {
 
   return (
     <Router>
-      {/* ✅ 로그인 여부 확인 후 Header 렌더링 */}
-      {authReady && (
+      {/* ✅ 로그인 여부 및 사용자명 준비 완료 후 Header 렌더링 */}
+      {authReady && username !== null && (
         <Header
           isLoggedIn={isLoggedIn}
           userEmail={userEmail}
+          username={username}
           onLogout={() => {
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
             setIsLoggedIn(false);
             setUserEmail('');
+            setUsername(null);
           }}
         />
       )}
 
-      {/* ✅ 로그인 여부 확인 전엔 전체 로딩 화면 */}
+      {/* ✅ 로그인 판단 전엔 전체 로딩 화면 */}
       {!authReady ? (
         <div style={{
           height: '100vh',
