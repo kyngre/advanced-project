@@ -1,3 +1,4 @@
+/* 🔻 헤더 전체 영역 스타일 */
 .header {
   display: flex;
   justify-content: space-between;
@@ -7,6 +8,7 @@
   color: white;
 }
 
+/* 🔻 로고 (왼쪽 상단 텍스트 링크) */
 .logo {
   font-size: 1.5rem;
   font-weight: bold;
@@ -14,18 +16,21 @@
   text-decoration: none;
 }
 
+/* 🔻 네비게이션 링크 영역 */
 .nav-links a {
   margin-right: 1rem;
   color: white;
   text-decoration: none;
 }
 
+/* 🔻 헤더 오른쪽 영역 (로그인/로그아웃, 유저 정보 등) */
 .header-right {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
+/* 🔻 버튼 스타일 (로그인/로그아웃 버튼 등) */
 .btn {
   background-color: red;
   color: white;
@@ -35,6 +40,7 @@
   cursor: pointer;
 }
 
+/* 🔻 환영 문구 (예: 로그인한 사용자 이메일) */
 .welcome {
   margin-right: 1rem;
 }
