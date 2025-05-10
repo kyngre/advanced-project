@@ -8,7 +8,7 @@ function Header({ isLoggedIn, username, onLogout }) {
   return (
     <header className="header">
       <div className="header-left">
-        <Link to="/" className="logo">🎬 MovieVerse</Link>
+        <Link to="/" className="logo">MovieRC</Link>
         <nav className="nav-links">
           <Link to="/">영화</Link>
           <Link to="/board">게시판</Link>
@@ -18,7 +18,7 @@ function Header({ isLoggedIn, username, onLogout }) {
       <div className="header-right">
         {isLoggedIn ? (
           <>
-            <span className="welcome">👤 {username}님</span>
+            <span className="welcome">{username}님</span>
             <button className="btn" onClick={() => navigate('/profile')}>
               회원정보
             </button>

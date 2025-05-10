@@ -46,7 +46,7 @@ const MoviesPage = ({ isLoggedIn }) => {
 
   return (
     <div className="movies-page">
-      <h2 className="text-2xl font-bold mb-4">🎬 영화 탐색</h2>
+      <h2 className="text-2xl font-bold mb-4">영화 탐색</h2>
 
       {/* ✅ 검색 및 필터 UI */}
       <div className="filter-bar">
