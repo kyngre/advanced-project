@@ -32,7 +32,7 @@ function AuthPage({ onLoginSuccess }) {
       if (mode === 'login') {
         const res = await axios.post('/token/', { email, password });
         localStorage.setItem('accessToken', res.data.access);
-        localStorage.setItem('refreshToken', response.data.refresh);
+        localStorage.setItem('refreshToken', res.data.refresh); // ✅ 수정됨
         onLoginSuccess?.();
         navigate('/');
       } else {
