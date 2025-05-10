@@ -3,13 +3,14 @@ import axios from '../api/axios';
 import './MoviesPage.css';
 import { useNavigate } from 'react-router-dom';
 
-const MoviesPage = () => {
+const MoviesPage = ({ isLoggedIn }) => {
   const [movies, setMovies] = useState([]);
   const [ottList, setOttList] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [ott, setOtt] = useState('');
   const [ordering, setOrdering] = useState('');
+  const [subscribedOnly, setSubscribedOnly] = useState(false); // ✅ 추가
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -25,7 +26,8 @@ const MoviesPage = () => {
     let url = '/movies/search/?';
     if (search) url += `search=${search}&`;
     if (ott) url += `ott_services=${ott}&`;
-    if (ordering) url += `ordering=${ordering}`;
+    if (ordering) url += `ordering=${ordering}&`;
+    if (subscribedOnly) url += `subscribed_only=true`;
 
     axios.get(url)
       .then(res => {
@@ -36,7 +38,7 @@ const MoviesPage = () => {
         console.error('영화 목록 불러오기 실패:', err);
         setError('영화 목록을 불러오는 데 실패했습니다.');
       });
-  }, [search, ott, ordering]);
+  }, [search, ott, ordering, subscribedOnly]);
 
   return (
     <div className="movies-page">
@@ -73,6 +75,18 @@ const MoviesPage = () => {
           <option value="average_rating">평점 낮은순</option>
           <option value="title">제목순</option>
         </select>
+
+        {/* ✅ 로그인한 사용자에게만 보이는 필터 */}
+        {isLoggedIn && (
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <input
+              type="checkbox"
+              checked={subscribedOnly}
+              onChange={(e) => setSubscribedOnly(e.target.checked)}
+            />
+            구독 중인 OTT만 보기
+          </label>
+        )}
       </div>
 
       {/* ✅ 에러 메시지 */}
