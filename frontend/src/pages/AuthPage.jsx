@@ -32,18 +32,31 @@ function AuthPage({ onLoginSuccess }) {
       if (mode === 'login') {
         const res = await axios.post('/token/', { email, password });
         localStorage.setItem('accessToken', res.data.access);
-        localStorage.setItem('refreshToken', res.data.refresh); // ✅ 수정됨
+        localStorage.setItem('refreshToken', res.data.refresh);
         onLoginSuccess?.();
         navigate('/');
       } else {
         await axios.post('/users/register/', { email, username, password });
         const res = await axios.post('/token/', { email, password });
         localStorage.setItem('accessToken', res.data.access);
+        localStorage.setItem('refreshToken', res.data.refresh); // ✅ 추가됨
         onLoginSuccess?.();
         navigate('/');
       }
+
+      // ✅ 입력 초기화
+      setEmail('');
+      setUsername('');
+      setPassword('');
     } catch (err) {
-      setErrorMessage(mode === 'login' ? '로그인에 실패하였습니다.' : '회원가입에 실패하였습니다.');
+      const defaultMessage = mode === 'login' ? '로그인에 실패하였습니다.' : '회원가입에 실패하였습니다.';
+      const detail =
+        err.response?.data?.detail ||
+        err.response?.data?.username?.[0] ||
+        err.response?.data?.email?.[0] ||
+        err.response?.data?.password?.[0] ||
+        '';
+      setErrorMessage(`${defaultMessage} ${detail}`);
     } finally {
       setLoading(false);
     }
