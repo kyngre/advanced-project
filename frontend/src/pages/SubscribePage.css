@@ -1,0 +1,39 @@
+.subscribe-page {
+  padding: 2rem;
+  color: white;
+  background-color: #141414;
+  min-height: 100vh;
+}
+
+.ott-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.ott-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #222;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.ott-item img {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+}
+
+.save-btn {
+  background-color: #e50914;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
