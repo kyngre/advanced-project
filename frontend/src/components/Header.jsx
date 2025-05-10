@@ -31,15 +31,16 @@ function Header({ isLoggedIn, onLogout }) {
         <nav className="nav-links">
           <Link to="/">영화</Link>
           <Link to="/board">게시판</Link>
-          {/* 향후 마이페이지 추가 가능 */}
         </nav>
       </div>
 
       <div className="header-right">
         {isLoggedIn ? (
           <>
-            <span className="welcome">{username ? `${username}님` : '사용자님'}</span>
-            <Link to="/profile" className="btn">회원정보</Link>
+            <span className="welcome">👤 {username ? `${username}님` : '사용자님'}</span>
+            <button className="btn" onClick={() => navigate('/profile')}>
+              회원정보
+            </button>
             <button className="btn" onClick={onLogout}>로그아웃</button>
           </>
         ) : (
