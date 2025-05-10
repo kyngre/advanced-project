@@ -12,5 +12,5 @@ urlpatterns = [
     path('subscribe/', subscribe_ott, name='subscribe-ott'), 
 
     # ✅ 사용자 프로필 수정: PUT 요청 (로그인 필수, 이메일, 사용자명 수정)
-    path('users/update/', update_profile , name='update-profile'),  # 사용자 프로필 수정 API 추가
+     path('update/', update_profile),  # ✅ 추가된 부분 , name='update-profile'),  # 사용자 프로필 수정 API 추가
 ]
