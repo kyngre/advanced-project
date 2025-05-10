@@ -4,8 +4,14 @@ import { useParams } from 'react-router-dom';
 import './MovieDetailPage.css';
 import { ClipLoader } from 'react-spinners';
 
+/**
+ * 영화 상세 페이지 컴포넌트
+ * - 영화 정보, 리뷰 작성/수정/삭제, 댓글 기능 포함
+ */
 const MovieDetailPage = () => {
   const { id } = useParams();
+
+  // 🔧 상태 정의
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
@@ -15,6 +21,7 @@ const MovieDetailPage = () => {
   const [newComment, setNewComment] = useState({});
   const token = localStorage.getItem('access');
 
+  /** 영화 상세 정보 가져오기 */
   const fetchMovieDetail = async () => {
     try {
       const response = await axios.get(`/movies/${id}/`);
@@ -31,6 +38,7 @@ const MovieDetailPage = () => {
     fetchMovieDetail();
   }, [id]);
 
+  /** 리뷰 작성 */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -52,6 +60,7 @@ const MovieDetailPage = () => {
     setIsSubmitting(false);
   };
 
+  /** 리뷰 좋아요 */
   const handleLike = async (reviewId) => {
     if (!token) return alert('로그인이 필요합니다.');
     try {
@@ -64,6 +73,7 @@ const MovieDetailPage = () => {
     }
   };
 
+  /** 리뷰 삭제 */
   const handleDelete = async (reviewId) => {
     if (!window.confirm('정말 삭제하시겠습니까?')) return;
     try {
@@ -76,16 +86,19 @@ const MovieDetailPage = () => {
     }
   };
 
+  /** 리뷰 수정 시작 */
   const startEditing = (review) => {
     setEditReviewId(review.id);
     setEditReviewData({ rating: review.rating, comment: review.comment });
   };
 
+  /** 리뷰 수정 취소 */
   const cancelEditing = () => {
     setEditReviewId(null);
     setEditReviewData({ rating: 5, comment: '' });
   };
 
+  /** 리뷰 수정 제출 */
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -104,10 +117,12 @@ const MovieDetailPage = () => {
     }
   };
 
+  /** 댓글 입력 상태 업데이트 */
   const handleCommentChange = (reviewId, value) => {
     setNewComment({ ...newComment, [reviewId]: value });
   };
 
+  /** 댓글 작성 */
   const handleCommentSubmit = async (reviewId) => {
     if (!newComment[reviewId]?.trim()) return;
     try {
@@ -123,6 +138,7 @@ const MovieDetailPage = () => {
     }
   };
 
+  /** 댓글 삭제 */
   const handleCommentDelete = async (commentId) => {
     if (!window.confirm('댓글을 삭제하시겠습니까?')) return;
     try {
@@ -135,6 +151,7 @@ const MovieDetailPage = () => {
     }
   };
 
+  // 🔄 로딩 상태 처리
   if (loading) {
     return (
       <div style={{
@@ -154,6 +171,7 @@ const MovieDetailPage = () => {
 
   if (!movie) return <p style={{ color: 'white' }}>영화 정보를 찾을 수 없습니다.</p>;
 
+  // 🎖️ 리뷰 정렬
   const top3Reviews = [...(movie.reviews || [])]
     .sort((a, b) => b.like_count - a.like_count)
     .slice(0, 3);
@@ -162,6 +180,7 @@ const MovieDetailPage = () => {
     (review) => !top3Reviews.find((top) => top.id === review.id)
   );
 
+  /** 리뷰 카드 렌더링 */
   const renderReviewCard = (review, isTop = false) => {
     const isEditing = editReviewId === review.id;
     const cardClass = `review-card${isTop ? ' top-review' : ''}`;
@@ -237,6 +256,7 @@ const MovieDetailPage = () => {
     );
   };
 
+  // 📦 최종 렌더링
   return (
     <div className="movie-detail-container">
       <h1>{movie.title}</h1>
