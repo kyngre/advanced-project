@@ -1,18 +1,22 @@
+/* 🎯 App 루트 컴포넌트의 기본 정렬 */
 .App {
   text-align: center;
 }
 
+/* 🚀 App 로고 이미지 */
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
 
+/* 🌀 로고 애니메이션 (motion 허용 환경일 때만) */
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
 }
 
+/* 🖥️ 기본 헤더 스타일 (CRA 기본값) */
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -24,10 +28,12 @@
   color: white;
 }
 
+/* 🔗 링크 스타일 */
 .App-link {
   color: #61dafb;
 }
 
+/* 🌀 로고 회전 애니메이션 */
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
